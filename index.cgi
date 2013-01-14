@@ -46,16 +46,8 @@ if __name__ == "__main__":
 	users = user.UserList(conf.get("users"))
 	login = user.Login(cookies, users, form)
 
-	if os.environ["REQUEST_METHOD"] == "POST":
-		print(header(302))
-		print(login.cookies)
-		if os.environ["SERVER_PORT"] == "80":
-			print("Location: http://" + os.environ["HTTP_HOST"] + os.environ["REQUEST_URI"])
-		else:
-			print("Location: https://" + os.environ["HTTP_HOST"] + os.environ["REQUEST_URI"])
-		print()
-		sys.exit(0)
-
+	if form.getfirst("action") == "logout":
+		login.clear()
 	print(header(200))
 	print("Content-Type: text/html; charset=utf8")
 	print(login.cookies)
@@ -66,14 +58,33 @@ if __name__ == "__main__":
 	print("<body>")
 
 	if not login.valid():
+		if "username" in form or "password" in form:
+			print("<p>Login failed!</p>")
 		print("<p><form method=\"POST\" action=\"/\"><table>")
 		print(html.tb_row("User", html.f_input("username")))
 		print(html.tb_row("Pass", html.f_input("password", True)))
-		print(html.tb_row(None, html.f_submit()))
-		print("</table>")
-		print("</form></p>")
+		if "action" not in form:
+			print(html.tb_row(None, html.f_submit()))
+			print("</table>")
+			print("</form></p>")
+			print("<p><a href=\"?action=new_user\">New user</a></p>")
+		elif form.getfirst("action") == "new_user":
+			print(html.tb_row("Pass (again)", html.f_input("password_again", True)))
+			print(html.tb_row(None, html.f_submit()))
+			print("</table>")
+			print(html.f_hidden("action", "new_user_2"))
+			print("</form></p>")
+		elif form.getfirst("action") == "new_user_2":
+			name = form.getfirst("username")
+			passwd = form.getfirst("password", "")
+			if name is None or (passwd != form.getfirst("password")):
+				print("<p>Something was amiss!</p>")
+			else:
+				u = user.User(name, passwd, [])
+				users.append(u)
 	else:
-		print("Hello " + login.name())
+		print("<p>Hello " + login.name() + "!</p>")
+		print("<p><a href=\"?action=logout\">Log out</a></p>")
 
 	print("<p><h1>Form data</h1><pre>")
 	for x in form:
@@ -90,9 +101,7 @@ if __name__ == "__main__":
 	print("</pre></p>")
 
 	print("<p><h1>Misc test data</h1><pre>")
-	print("Users:")
-	for x in users.as_list():
-		print(cgi.escape(str(x)))
+	print("Login: " + ("valid" if login.valid() else "invalid"))
 	print(str(os.environ["REQUEST_METHOD"]))
 	print(str(os.environ["SERVER_PORT"]))
 	print("</pre></p>")

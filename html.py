@@ -1,3 +1,5 @@
+import cgi
+
 def f_input(name, password=False):
 	return "<input name=\"" + str(name) + "\" type=\"" + ("password" if password else "text") + "\"/>"
 

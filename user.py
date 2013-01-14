@@ -1,6 +1,8 @@
 import os
+import Cookie
 import pickle
 import random
+import hashlib
 
 class Login(object):
 	def __init__(self, cookies, userlist, form):
@@ -17,6 +19,10 @@ class Login(object):
 			return self.cookies["USERNAME"].value
 		except:
 			return None
+
+	def clear(self):
+		self.cookies["USERNAME"] = None
+		self.cookies["PASSWORD"] = None
 
 	def valid(self):
 		try:
