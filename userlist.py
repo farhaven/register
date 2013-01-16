@@ -24,6 +24,11 @@ class Login(object):
 		self.cookies["USERNAME"] = None
 		self.cookies["PASSWORD"] = None
 
+	def validate(self, data):
+		self.cookies["USERNAME"] = data.getfirst("username")
+		self.cookies["PASSWORD"] = data.getfirst("password")
+		return self.valid()
+
 	def valid(self):
 		try:
 			name = self.cookies["USERNAME"].value
@@ -34,10 +39,10 @@ class Login(object):
 
 class User(object):
 	def __str__(self):
-		return "&lt;nick=" + str(self.name) + "; admin=" + str(self.is_admin) + "&gt;"
+		return "&lt;nick=" + str(self.name) + " &gt;"
 
 	def __init__(self, name, email, password, shirts):
-		self.is_admin = False
+		self.has_paid = False
 		self.name = name
 		self.email = email
 		self.shirts = shirts
@@ -54,14 +59,15 @@ class User(object):
 		return self.password == m.hexdigest()
 
 class UserList(object):
-	def __init__(self, path):
-		self.path = path
+	def __init__(self, conf):
+		self.path = conf.get("users")
 
 	def as_list(self):
 		fh = None
 		try:
 			fh = open(self.path, "r")
-		except:
+		except Exception as err:
+			print(str(err))
 			return []
 		users = pickle.load(fh)
 		fh.close()
@@ -69,9 +75,19 @@ class UserList(object):
 
 	def append(self, user):
 		users = self.as_list()
-		fh = open(self.path, "w")
 		users.append(user)
+		fh = open(self.path, "w")
 		pickle.dump(users, fh)
+		fh.close()
+
+	def remove(self, user):
+		users = self.as_list()
+		users_new = []
+		for x in users:
+			if x.name != user.name:
+				users_new.append(x)
+		fh = open(self.path, "w")
+		pickle.dump(users_new, fh)
 		fh.close()
 
 	def find(self, name):

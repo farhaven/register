@@ -1,14 +1,15 @@
+import cgi
+
 import menu
 import userlist
 
 def addUser(data, conf):
-	print(menu.header())
-	users = userlist.UserList(conf.get("users"))
+	users = userlist.UserList(conf)
 
-	name = data.getfirst("username", "")
-	email = data.getfirst("email", "")
-	passwd = data.getfirst("password", "")
-	passwd_again = data.getfirst("password_again", "")
+	name = cgi.escape(data.getfirst("username", ""))
+	email = cgi.escape(data.getfirst("email", ""))
+	passwd = cgi.escape(data.getfirst("password", ""))
+	passwd_again = cgi.escape(data.getfirst("password_again", ""))
 
 	failures = ""
 	if name == "":

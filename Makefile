@@ -6,7 +6,8 @@ FILES=index.cgi \
 		menu.py \
 		html.py \
 		userlist.py \
-		usermgmt.py
+		usermgmt.py \
+		style.css
 
 all: upload
 

@@ -6,8 +6,11 @@ def f_input(name, password=False):
 def f_hidden(name, value):
 	return "<input type=\"hidden\" name=\"" + cgi.escape(name) + "\" value=\"" + cgi.escape(value) + "\"/>"
 
-def f_submit():
-	return "<input type=\"submit\"/>"
+def f_submit(value=None):
+	s = "<input type=\"submit\""
+	if value is not None:
+		s += " value=\"" + value + "\""
+	return s + "/>"
 
 def tb_row(*fields):
 	s = "<tr>"
