@@ -71,7 +71,7 @@ class UserList(object):
 			return []
 		users = pickle.load(fh)
 		fh.close()
-		return users
+		return sorted(users, key=lambda a: a.name.lower())
 
 	def append(self, user):
 		users = self.as_list()

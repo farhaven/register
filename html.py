@@ -20,3 +20,10 @@ def tb_row(*fields):
 		else:
 			s += "<td>" + str(f) + "</td>"
 	return s + "</tr>"
+
+def form(*items):
+	s  = "<form method=\"POST\">"
+	for x in items:
+		s += x
+	s += "</form>"
+	return s

@@ -4,6 +4,7 @@ import os
 import cgi
 import html
 import userlist
+import urllib
 
 def header():
 	s  = "<div class=\"header\">"
@@ -16,20 +17,26 @@ def admin(conf):
 	users = userlist.UserList(conf)
 	form = cgi.FieldStorage()
 
-	# remove user
 	if form.getfirst("action") == "delete":
 		u = users.find(form.getfirst("user", ""))
 		if u is not None:
 			users.remove(u)
-			print("<p>" + form.getfirst("user", "") + " deleted</p>")
+	elif form.getfirst("action") == "setpaid":
+		u = users.find(form.getfirst("user", ""))
+		if u is not None:
+			users.remove(u)
+			u.has_paid = True
+			users.append(u)
 
 	print("<h1>Users</h1>")
-	print("<div><ul>")
+	print("<div><table>")
 	for x in users.as_list():
-		print("<li>")
-		print(x.name + " <a href=/admin?action=delete&user=" + x.name + ">Delete</a>")
-		print("</li>")
-	print("</ul></div>")
+		tbl_del = "<a href=\"?action=delete&user=" + urllib.quote(x.name) + "\">Delete</a>"
+		tbl_paid = "Paid"
+		if not x.has_paid:
+			tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(x.name) + "\">Set as paid</a>"
+		print(html.tb_row(x.name, tbl_del, tbl_paid))
+	print("</table></div>")
 
 	# debug foo, can be removed once we are "stable"
 	print("<h1>Environment</h1>")
