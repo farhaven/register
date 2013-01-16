@@ -4,6 +4,6 @@ table {
 }
 
 table, td, th {
-	padding: 0 0.5em 0 0.5em;
+	padding: 0.1em 0.5em 0.1em 0.5em;
 	border: 1px solid black;
 }

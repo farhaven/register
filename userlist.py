@@ -43,6 +43,7 @@ class User(object):
 
 	def __init__(self, name, email, password, shirts):
 		self.has_paid = False
+		self.is_there = False
 		self.name = name
 		self.email = email
 		self.shirts = shirts
@@ -66,8 +67,7 @@ class UserList(object):
 		fh = None
 		try:
 			fh = open(self.path, "r")
-		except Exception as err:
-			print(str(err))
+		except:
 			return []
 		users = pickle.load(fh)
 		fh.close()

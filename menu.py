@@ -21,21 +21,34 @@ def admin(conf):
 		u = users.find(form.getfirst("user", ""))
 		if u is not None:
 			users.remove(u)
+	elif form.getfirst("action") == "setthere":
+		u = users.find(form.getfirst("user", ""))
+		if u is not None:
+			users.remove(u)
+			u.is_there = True if form.getfirst("value") == "yes" else False
+			users.append(u)
 	elif form.getfirst("action") == "setpaid":
 		u = users.find(form.getfirst("user", ""))
 		if u is not None:
 			users.remove(u)
-			u.has_paid = True
+			u.has_paid = True if form.getfirst("value") == "yes" else False
 			users.append(u)
 
 	print("<h1>Users</h1>")
 	print("<div><table>")
 	for x in users.as_list():
 		tbl_del = "<a href=\"?action=delete&user=" + urllib.quote(x.name) + "\">Delete</a>"
-		tbl_paid = "Paid"
-		if not x.has_paid:
-			tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(x.name) + "\">Set as paid</a>"
-		print(html.tb_row(x.name, tbl_del, tbl_paid))
+		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(x.name) + "&value="
+		if x.has_paid:
+			tbl_paid += "no\">has paid</a>"
+		else:
+			tbl_paid += "yes\">has not paid</a>"
+		tbl_there = "<a href=\"?action=setthere&user=" + urllib.quote(x.name) + "&value="
+		if x.is_there:
+			tbl_there += "no\">is there</a>"
+		else:
+			tbl_there += "yes\">is not there</a>"
+		print(html.tb_row(x.name, tbl_del, tbl_paid, tbl_there))
 	print("</table></div>")
 
 	# debug foo, can be removed once we are "stable"
@@ -82,7 +95,8 @@ def main(login, conf):
 
 	print("<div>User status for " + user.name)
 	print("<table>")
-	print(html.tb_row("Paid", ("Yes" if user.has_paid else "No")))
+	print(html.tb_row("Payment received", ("Yes" if user.has_paid else "No")))
+	print(html.tb_row("Is there", ("Yes" if user.is_there else "No")))
 	print(html.tb_row("Email", user.email))
 	print(html.tb_row("Shirts", str(user.shirts)))
 	print("</table>")
