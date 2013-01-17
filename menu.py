@@ -72,18 +72,6 @@ def admin(conf, conn):
 	print("</pre></p>")
 	print("</div>")
 
-	# debug foo, can be removed once we are "stable"
-	print("<h1>Environment</h1>")
-	print("<div><pre>")
-	for x in os.environ:
-		print(x + "=" + cgi.escape(os.environ[x]))
-	print("</pre></div>")
-	print("<h1>Form data</h1>")
-	print("<div><pre>")
-	for x in form.keys():
-		print(x + "=" + form[x].value)
-	print("</pre></div>")
-
 def main(login):
 	print("<h1>EH13 Registration</h1>")
 	# new user
