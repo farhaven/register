@@ -92,7 +92,7 @@ def main(login):
 
 	user = login.as_dict()
 
-	print("<div>User status for " + user["name"])
+	print("<div><h2>User status for " + user["name"] + "</h2>")
 	print("<table>")
 	print(html.tb_row("Payment received", ("Yes" if user["has_paid"] else "No")))
 	print(html.tb_row("Is there", ("Yes" if user["is_there"] else "No")))
