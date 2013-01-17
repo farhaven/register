@@ -82,7 +82,7 @@ if __name__ == "__main__":
 		sys.exit(0)
 
 	print("Status: 200 OK")
-	print("Content-Type: text/html; encoding=utf-8")
+	print("Content-Type: text/html; charset=utf-8")
 	print(login.cookies)
 	print()
 

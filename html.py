@@ -19,7 +19,7 @@ def tb_row(fields, head=False):
 	s = "<tr>"
 	for f in fields:
 		if f is None:
-			s += "<" + word + "/>"
+			s += "<" + word + "></" + word + ">"
 		else:
 			s += "<" + word + ">" + str(f) + "</" + word + ">"
 	return s + "</tr>"
