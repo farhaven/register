@@ -68,6 +68,8 @@ if __name__ == "__main__":
 				cursor.execute("DELETE FROM shirts WHERE (u_id = %s AND size = %s) LIMIT 1", (int(u_id), size))
 			elif op == "add":
 				cursor.execute("INSERT INTO shirts (u_id, size) VALUES (%s, %s)", (int(u_id), size))
+			elif op == "clear":
+				cursor.execute("DELETE FROM shirts WHERE u_id = %s", (int(u_id), ))
 			conn.commit()
 		except:
 			pass

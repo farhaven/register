@@ -115,6 +115,10 @@ def main(login):
 		return html.tb_row(*items)
 
 	print("<div><h2>Order shirts</h2>")
+	print("<form method=\"POST\">")
+	print(html.f_hidden("order", "clear_all"))
+	print(html.f_submit("Clear order"))
+	print("</form>")
 	print("<table>")
 	print(order_row("S"))
 	print(order_row("M"))
