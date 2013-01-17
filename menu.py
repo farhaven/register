@@ -33,13 +33,14 @@ def admin(conf, conn):
 
 	print("<h1>Users</h1>")
 	print("<div><table>")
-	print(html.tb_row(["Name", "Delete", "Paid", "Is there", "Shirts"], head=True))
-	cursor.execute("SELECT u_id, name, paid, there FROM users");
+	print(html.tb_row(["Name", "eMail", "Delete", "Paid", "Is there", "Shirts"], head=True))
+	cursor.execute("SELECT u_id, name, email, paid, there FROM users");
 	for x in cursor.fetchall():
 		user = {
 				"name": x[1],
-				"has_paid": bool(x[2]),
-				"is_there": bool(x[3]),
+				"email": x[2],
+				"has_paid": bool(x[3]),
+				"is_there": bool(x[4]),
 				"shirts": []
 		}
 		cursor.execute("SELECT size FROM shirts WHERE u_id = %s", (x[0], ))
@@ -56,7 +57,7 @@ def admin(conf, conn):
 			tbl_there += "no\">yes</a>"
 		else:
 			tbl_there += "yes\">no</a>"
-		print(html.tb_row([user["name"], tbl_del, tbl_paid, tbl_there, user["shirts"]]))
+		print(html.tb_row([user["name"], user["email"], tbl_del, tbl_paid, tbl_there, user["shirts"]]))
 	print("</table></div>")
 
 	print("<div><h1>Misc info</h1>")
