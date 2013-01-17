@@ -60,7 +60,7 @@ def admin(conf, conn):
 	print("</table></div>")
 
 	print("<div><h1>Misc info</h1>")
-	print("<p>Admins are registerd in <code>/www/register/passwd</code>, which is a htpasswd file. To add a new user do the following:")
+	print("<p>Admins are registerd in <code>/www/register/passwd</code>, which is a htpasswd file. To add a new admin do the following:")
 	print("<pre>")
 	print("$ ssh root@eh13.c3pb.de")
 	print("# cd /www/register")
