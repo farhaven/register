@@ -59,6 +59,19 @@ def admin(conf, conn):
 		print(html.tb_row([user["name"], tbl_del, tbl_paid, tbl_there, user["shirts"]]))
 	print("</table></div>")
 
+	print("<div><h1>Misc info</h1>")
+	print("<p>Admins are registerd in <code>/www/register/passwd</code>, which is a htpasswd file. To add a new user do the following:")
+	print("<pre>")
+	print("$ ssh root@eh13.c3pb.de")
+	print("# cd /www/register")
+	print("# htpasswd passwd &lt;user&gt;")
+	print("New password: &lt;foo&gt;")
+	print("Re-type new password: &lt;foo&gt;")
+	print("Adding password for user &lt;user&gt;")
+	print("# ^D")
+	print("</pre></p>")
+	print("</div>")
+
 	# debug foo, can be removed once we are "stable"
 	print("<h1>Environment</h1>")
 	print("<div><pre>")
