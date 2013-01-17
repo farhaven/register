@@ -63,7 +63,7 @@ def admin(conf, conn):
 		print(x + "=" + form[x].value)
 	print("</pre></div>")
 
-def main(login, conf):
+def main(login):
 	print("<h1>EH13 Registration</h1>")
 	# new user
 	if not login.valid():
@@ -103,4 +103,23 @@ def main(login, conf):
 	print(html.f_hidden("action", "logout"))
 	print(html.f_submit("Log out"))
 	print("</form>")
+	print("</div>")
+
+	def order_row(size):
+		items = [ size ]
+		if size in user["shirts"]:
+			items.append("<a href=\"?order=sub_" + size + "\">-</a>")
+		else:
+			items.append("-")
+		items.append("<a href=\"?order=add_" + size + "\">+</a>")
+		return html.tb_row(*items)
+
+	print("<div><h2>Order shirts</h2>")
+	print("<table>")
+	print(order_row("S"))
+	print(order_row("M"))
+	print(order_row("L"))
+	print(order_row("XL"))
+	print(order_row("XXL"))
+	print("</table>")
 	print("</div>")

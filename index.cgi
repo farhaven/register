@@ -57,6 +57,24 @@ if __name__ == "__main__":
 			print("Location: /")
 			print()
 			sys.exit(0)
+	elif form.getfirst("order") is not None:
+		cursor = conn.cursor()
+		try:
+			cursor.execute("SELECT u_id FROM users WHERE name = %s", (login.name()))
+			u_id = cursor.fetchone()[0]
+			order = form.getfirst("order")
+			(op, size) = order.split("_", 2)
+			if op == "sub":
+				cursor.execute("DELETE FROM shirts WHERE (u_id = %s AND size = %s) LIMIT 1", (int(u_id), size))
+			elif op == "add":
+				cursor.execute("INSERT INTO shirts (u_id, size) VALUES (%s, %s)", (int(u_id), size))
+			conn.commit()
+		except:
+			pass
+		print("Status: 302 See Other")
+		print("Location: /")
+		print()
+		sys.exit(0)
 
 	print("Status: 200 OK")
 	print("Content-Type: text/html; encoding=utf-8")
@@ -76,7 +94,7 @@ if __name__ == "__main__":
 	if "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin"):
 		menu.admin(conf, conn)
 	elif form.getfirst("action", "logout") == "logout":
-		menu.main(login, conf)
+		menu.main(login)
 	elif form.getfirst("action") == "add_user":
 		usermgmt.addUser(form, conn)
 	elif form.getfirst("action") == "login":
