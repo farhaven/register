@@ -30,25 +30,30 @@ def admin(conf, conn):
 
 	print("<h1>Users</h1>")
 	print("<div><table>")
-	cursor.execute("SELECT name, paid, there FROM users");
+	print(html.tb_row(["Name", "Delete", "Paid", "Is there", "Shirts"], head=True))
+	cursor.execute("SELECT u_id, name, paid, there FROM users");
 	for x in cursor.fetchall():
 		user = {
-				"name": x[0],
-				"has_paid": bool(x[1]),
-				"is_there": bool(x[2])
+				"name": x[1],
+				"has_paid": bool(x[2]),
+				"is_there": bool(x[3]),
+				"shirts": []
 		}
+		cursor.execute("SELECT size FROM shirts WHERE u_id = %s", (x[0], ))
+		for s in cursor.fetchall():
+			user["shirts"].append(s[0])
 		tbl_del = "<a href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\">Delete</a>"
 		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(user["name"]) + "&value="
 		if user["has_paid"]:
-			tbl_paid += "no\">has paid</a>"
+			tbl_paid += "no\">yes</a>"
 		else:
-			tbl_paid += "yes\">has not paid</a>"
+			tbl_paid += "yes\">no</a>"
 		tbl_there = "<a href=\"?action=setthere&user=" + urllib.quote(user["name"]) + "&value="
 		if user["is_there"]:
-			tbl_there += "no\">is there</a>"
+			tbl_there += "no\">yes</a>"
 		else:
-			tbl_there += "yes\">is not there</a>"
-		print(html.tb_row(user["name"], tbl_del, tbl_paid, tbl_there))
+			tbl_there += "yes\">no</a>"
+		print(html.tb_row([user["name"], tbl_del, tbl_paid, tbl_there, user["shirts"]]))
 	print("</table></div>")
 
 	# debug foo, can be removed once we are "stable"
@@ -71,9 +76,9 @@ def main(login):
 		print("<form method=\"POST\">")
 		print(html.f_hidden("action", "login"))
 		print("<table>")
-		print(html.tb_row("Name", html.f_input("username")))
-		print(html.tb_row("Password", html.f_input("password", True)))
-		print(html.tb_row(None, html.f_submit()))
+		print(html.tb_row(["Name", html.f_input("username")]))
+		print(html.tb_row(["Password", html.f_input("password", True)]))
+		print(html.tb_row([None, html.f_submit()]))
 		print("</table>")
 		print("</form></div>")
 
@@ -81,11 +86,11 @@ def main(login):
 		print("<form method=\"POST\">")
 		print(html.f_hidden("action", "add_user"))
 		print("<table>")
-		print(html.tb_row("Name", html.f_input("username")))
-		print(html.tb_row("Mail", html.f_input("email")))
-		print(html.tb_row("Password", html.f_input("password", True)))
-		print(html.tb_row("Password (again)", html.f_input("password_again", True)))
-		print(html.tb_row(None, html.f_submit()))
+		print(html.tb_row(["Name", html.f_input("username")]))
+		print(html.tb_row(["Mail", html.f_input("email")]))
+		print(html.tb_row(["Password", html.f_input("password", True)]))
+		print(html.tb_row(["Password (again)", html.f_input("password_again", True)]))
+		print(html.tb_row([None, html.f_submit()]))
 		print("</table>")
 		print("</form></div>")
 		return
@@ -94,10 +99,10 @@ def main(login):
 
 	print("<div><h2>User status for " + user["name"] + "</h2>")
 	print("<table>")
-	print(html.tb_row("Payment received", ("Yes" if user["has_paid"] else "No")))
-	print(html.tb_row("Is there", ("Yes" if user["is_there"] else "No")))
-	print(html.tb_row("Email", user["email"]))
-	print(html.tb_row("Shirts", str(user["shirts"])))
+	print(html.tb_row(["Payment received", ("Yes" if user["has_paid"] else "No")]))
+	print(html.tb_row(["Is there", ("Yes" if user["is_there"] else "No")]))
+	print(html.tb_row(["Email", user["email"]]))
+	print(html.tb_row(["Shirts", str(user["shirts"])]))
 	print("</table>")
 	print("<form method=\"POST\">")
 	print(html.f_hidden("action", "logout"))
@@ -112,7 +117,7 @@ def main(login):
 		else:
 			items.append("-")
 		items.append("<a href=\"?order=add_" + size + "\">+</a>")
-		return html.tb_row(*items)
+		return html.tb_row(items)
 
 	print("<div><h2>Order shirts</h2>")
 	print("<form method=\"POST\">")

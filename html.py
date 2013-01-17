@@ -12,13 +12,16 @@ def f_submit(value=None):
 		s += " value=\"" + value + "\""
 	return s + "/>"
 
-def tb_row(*fields):
+def tb_row(fields, head=False):
+	word = "td"
+	if head:
+		word = "th"
 	s = "<tr>"
 	for f in fields:
 		if f is None:
-			s += "<td/>"
+			s += "<" + word + "/>"
 		else:
-			s += "<td>" + str(f) + "</td>"
+			s += "<" + word + ">" + str(f) + "</" + word + ">"
 	return s + "</tr>"
 
 def form(*items):
