@@ -3,7 +3,6 @@ from __future__ import print_function
 import os
 import cgi
 import html
-import userlist
 import urllib
 
 def header():
@@ -13,42 +12,43 @@ def header():
 	s += "</div>"
 	return s + "<hr>"
 
-def admin(conf):
-	users = userlist.UserList(conf)
+def admin(conf, conn):
 	form = cgi.FieldStorage()
+	cursor = conn.cursor()
 
 	if form.getfirst("action") == "delete":
-		u = users.find(form.getfirst("user", ""))
-		if u is not None:
-			users.remove(u)
+		cursor.execute("DELETE FROM users WHERE name = %s", (form.getfirst("user", ""), ))
+		conn.commit()
 	elif form.getfirst("action") == "setthere":
-		u = users.find(form.getfirst("user", ""))
-		if u is not None:
-			users.remove(u)
-			u.is_there = True if form.getfirst("value") == "yes" else False
-			users.append(u)
+		val = True if form.getfirst("value") == "yes" else False
+		rv = cursor.execute("UPDATE users SET there = %s WHERE name = %s", (val, form.getfirst("user", "")))
+		conn.commit()
 	elif form.getfirst("action") == "setpaid":
-		u = users.find(form.getfirst("user", ""))
-		if u is not None:
-			users.remove(u)
-			u.has_paid = True if form.getfirst("value") == "yes" else False
-			users.append(u)
+		val = True if form.getfirst("value") == "yes" else False
+		cursor.execute("UPDATE users SET paid = %s WHERE name = %s", (val, form.getfirst("user", "")))
+		conn.commit()
 
 	print("<h1>Users</h1>")
 	print("<div><table>")
-	for x in users.as_list():
-		tbl_del = "<a href=\"?action=delete&user=" + urllib.quote(x.name) + "\">Delete</a>"
-		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(x.name) + "&value="
-		if x.has_paid:
+	cursor.execute("SELECT name, paid, there FROM users");
+	for x in cursor.fetchall():
+		user = {
+				"name": x[0],
+				"has_paid": bool(x[1]),
+				"is_there": bool(x[2])
+		}
+		tbl_del = "<a href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\">Delete</a>"
+		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(user["name"]) + "&value="
+		if user["has_paid"]:
 			tbl_paid += "no\">has paid</a>"
 		else:
 			tbl_paid += "yes\">has not paid</a>"
-		tbl_there = "<a href=\"?action=setthere&user=" + urllib.quote(x.name) + "&value="
-		if x.is_there:
+		tbl_there = "<a href=\"?action=setthere&user=" + urllib.quote(user["name"]) + "&value="
+		if user["is_there"]:
 			tbl_there += "no\">is there</a>"
 		else:
 			tbl_there += "yes\">is not there</a>"
-		print(html.tb_row(x.name, tbl_del, tbl_paid, tbl_there))
+		print(html.tb_row(user["name"], tbl_del, tbl_paid, tbl_there))
 	print("</table></div>")
 
 	# debug foo, can be removed once we are "stable"
@@ -90,15 +90,14 @@ def main(login, conf):
 		print("</form></div>")
 		return
 
-	users = userlist.UserList(conf)
-	user = users.find(login.name())
+	user = login.as_dict()
 
-	print("<div>User status for " + user.name)
+	print("<div>User status for " + user["name"])
 	print("<table>")
-	print(html.tb_row("Payment received", ("Yes" if user.has_paid else "No")))
-	print(html.tb_row("Is there", ("Yes" if user.is_there else "No")))
-	print(html.tb_row("Email", user.email))
-	print(html.tb_row("Shirts", str(user.shirts)))
+	print(html.tb_row("Payment received", ("Yes" if user["has_paid"] else "No")))
+	print(html.tb_row("Is there", ("Yes" if user["is_there"] else "No")))
+	print(html.tb_row("Email", user["email"]))
+	print(html.tb_row("Shirts", str(user["shirts"])))
 	print("</table>")
 	print("<form method=\"POST\">")
 	print(html.f_hidden("action", "logout"))

@@ -5,8 +5,8 @@ REMOTE_USER = root
 FILES=index.cgi \
 		menu.py \
 		html.py \
-		userlist.py \
 		usermgmt.py \
+		db.py \
 		style.css
 
 all: upload

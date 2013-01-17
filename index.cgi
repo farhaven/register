@@ -5,14 +5,13 @@ from __future__ import print_function
 import cgitb; cgitb.enable()
 import cgi
 import Cookie
-
 import os
 import os.path
 import sys
 
+import db
 import menu
 import usermgmt
-import userlist
 
 class Config(object):
 	def __init__(self, d):
@@ -31,11 +30,13 @@ def redirect_https():
 		sys.exit(0)
 
 conf = Config({
-	"users": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "users.pickle")
-	})
+	"db_user": "register",
+	"db_pass": "Ohy9chohvoo1epee"
+})
 
 if __name__ == "__main__":
 	redirect_https()
+	conn = db.init(conf)
 
 	if "REQUEST_URI" in os.environ:
 		q = os.environ["REQUEST_URI"].split('?', 2)
@@ -45,7 +46,7 @@ if __name__ == "__main__":
 	cookies = Cookie.SimpleCookie()
 	if "HTTP_COOKIE" in os.environ:
 		cookies = Cookie.SimpleCookie(os.environ["HTTP_COOKIE"])
-	login = userlist.Login(cookies, userlist.UserList(conf), form)
+	login = usermgmt.Login(cookies, conn, form)
 
 	if form.getfirst("action") == "logout":
 		login.clear()
@@ -73,11 +74,11 @@ if __name__ == "__main__":
 
 	print(menu.header())
 	if "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin"):
-		menu.admin(conf)
+		menu.admin(conf, conn)
 	elif form.getfirst("action", "logout") == "logout":
 		menu.main(login, conf)
 	elif form.getfirst("action") == "add_user":
-		usermgmt.addUser(form, conf)
+		usermgmt.addUser(form, conn)
 	elif form.getfirst("action") == "login":
 		if not login.valid():
 			print("<h1>Login failed!</h1>")
