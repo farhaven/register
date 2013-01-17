@@ -12,4 +12,4 @@ FILES=index.cgi \
 all: upload
 
 upload: $(FILES)
-	pax -w $(.ALLSRC) | ssh $(REMOTE_USER)@$(REMOTE_HOST) "cd $(REMOTE_PATH); tar xv"
+	tar -c -f - $? | ssh $(REMOTE_USER)@$(REMOTE_HOST) "cd $(REMOTE_PATH); tar xv"
