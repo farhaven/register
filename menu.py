@@ -17,8 +17,11 @@ def admin(conf, conn):
 	cursor = conn.cursor()
 
 	if form.getfirst("action") == "delete":
-		cursor.execute("DELETE FROM users WHERE name = %s", (form.getfirst("user", ""), ))
-		conn.commit()
+		if cursor.execute("SELECT u_id FROM users WHERE name = %s", (form.getfirst("user", ""), )) == 1L:
+			uid = cursor.fetchone()[0]
+			cursor.execute("DELETE FROM shirts WHERE u_id = %s", (uid, ))
+			cursor.execute("DELETE FROM users WHERE u_id = %s", (uid, ))
+			conn.commit()
 	elif form.getfirst("action") == "setthere":
 		val = True if form.getfirst("value") == "yes" else False
 		rv = cursor.execute("UPDATE users SET there = %s WHERE name = %s", (val, form.getfirst("user", "")))
