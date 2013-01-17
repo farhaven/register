@@ -7,7 +7,7 @@ statements = {
 }
 
 def init(conf):
-	conn = MySQLdb.connect(user=conf.get("db_user"), passwd=conf.get("db_pass"), db="register")
+	conn = MySQLdb.connect(user=conf.get("db_user"), passwd=conf.get("db_pass"), db=conf.get("db_database"))
 	c = conn.cursor()
 	c.execute(statements["table_create_users"])
 	c.execute(statements["table_create_shirts"])

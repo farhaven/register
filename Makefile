@@ -7,6 +7,7 @@ FILES=index.cgi \
 		html.py \
 		usermgmt.py \
 		db.py \
+		settings.json \
 		style.css
 
 all: upload

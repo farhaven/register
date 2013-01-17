@@ -8,14 +8,21 @@ import Cookie
 import os
 import os.path
 import sys
+import json
 
 import db
 import menu
 import usermgmt
 
 class Config(object):
-	def __init__(self, d):
-		self.dict = d
+	def __init__(self):
+		fh = None
+		if os.path.exists("settings.json"):
+			fh = open("settings.json")
+		else:
+			fh = open("settings.default.json")
+		self.dict = json.load(fh)
+		fh.close()
 
 	def get(self, n):
 		if n in self.dict:
@@ -29,12 +36,8 @@ def redirect_https():
 		print()
 		sys.exit(0)
 
-conf = Config({
-	"db_user": "register",
-	"db_pass": "Ohy9chohvoo1epee"
-})
-
 if __name__ == "__main__":
+	conf = Config()
 	redirect_https()
 	conn = db.init(conf)
 
