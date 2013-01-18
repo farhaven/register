@@ -26,7 +26,8 @@ class Login(object):
 				"pwhash": result[4],
 				"has_paid": bool(result[5]),
 				"is_there": bool(result[6]),
-				"shirts": []
+				"shirts": [],
+				"lunch": {}
 		}
 		cursor.execute("SELECT size FROM shirts WHERE u_id = %s", (result[0], ))
 		for x in cursor.fetchall():
@@ -39,6 +40,19 @@ class Login(object):
 			if size == "XXL": return 5
 			return float("infinity")
 		rv["shirts"] = sorted(rv["shirts"], key=extract_key)
+		if cursor.execute("SELECT buns, baloney, cheese, jam, cornflakes FROM lunch WHERE u_id = %s", (result[0], )) != 1L:
+			rv["lunch"]["buns"] = ""
+			rv["lunch"]["baloney"] = False
+			rv["lunch"]["cheese"] = False
+			rv["lunch"]["jam"] = False
+			rv["lunch"]["cornflakes"] = False
+		else:
+			l = cursor.fetchone()
+			rv["lunch"]["buns"] = l[0]
+			rv["lunch"]["baloney"] = l[1]
+			rv["lunch"]["cheese"] = l[2]
+			rv["lunch"]["jam"] = l[3]
+			rv["lunch"]["cornflakes"] = l[4]
 		return rv
 
 	def name(self):

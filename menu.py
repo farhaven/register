@@ -115,7 +115,7 @@ def main(login):
 	print("</form>")
 	print("</div>")
 
-	def order_row(size):
+	def shirt_order_row(size):
 		items = [ size ]
 		if size in user["shirts"]:
 			items.append("<a href=\"?order=sub_" + size + "\">-</a>")
@@ -130,10 +130,24 @@ def main(login):
 	print(html.f_submit("Clear order"))
 	print("</form>")
 	print("<table>")
-	print(order_row("S"))
-	print(order_row("M"))
-	print(order_row("L"))
-	print(order_row("XL"))
-	print(order_row("XXL"))
+	print(shirt_order_row("S"))
+	print(shirt_order_row("M"))
+	print(shirt_order_row("L"))
+	print(shirt_order_row("XL"))
+	print(shirt_order_row("XXL"))
 	print("</table>")
+	print("</div>")
+
+	print("<div><h2>Lunch order (per day)</h2>")
+	print("<form method=\"POST\">")
+	print(html.f_hidden("action", "update_lunch"))
+	print("<table>")
+	print(html.tb_row(["Buns", html.f_input("buns", value=user["lunch"]["buns"], size=10)]))
+	print(html.tb_row(["Baloney", html.f_checkbox("food", "baloney", user["lunch"]["baloney"])]))
+	print(html.tb_row(["Cheese", html.f_checkbox("food", "cheese", user["lunch"]["cheese"])]))
+	print(html.tb_row(["Jam", html.f_checkbox("food", "jam", user["lunch"]["jam"])]))
+	print(html.tb_row(["Cornflakes", html.f_checkbox("food", "cornflakes", user["lunch"]["cornflakes"])]))
+	print("</table>")
+	print(html.f_submit("Update"))
+	print("</form>")
 	print("</div>")

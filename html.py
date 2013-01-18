@@ -1,7 +1,17 @@
 import cgi
 
-def f_input(name, password=False):
-	return "<input name=\"" + str(name) + "\" type=\"" + ("password" if password else "text") + "\"/>"
+def f_input(name, value="", size=20, password=False):
+	return "<input name=\"" + str(name) + \
+		"\" type=\"" + ("password" if password else "text") + \
+		"\" size=\"" + str(size) + \
+		"\" value=\"" + str(value) + \
+		"\"/>"
+
+def f_checkbox(name, value, checked=False):
+	s = "<input name=\"" + str(name) + "\" type=\"checkbox\" value=\"" + value + "\""
+	if checked:
+		s += " checked=\"checked\""
+	return s + "/>"
 
 def f_hidden(name, value):
 	return "<input type=\"hidden\" name=\"" + cgi.escape(name) + "\" value=\"" + cgi.escape(value) + "\"/>"

@@ -36,6 +36,12 @@ def redirect_https():
 		print()
 		sys.exit(0)
 
+def redirect_post():
+	print("Status: 302 See Other")
+	print("Location: /")
+	print()
+	sys.exit(0)
+
 if __name__ == "__main__":
 	conf = Config()
 	redirect_https()
@@ -55,11 +61,41 @@ if __name__ == "__main__":
 		login.clear()
 	elif form.getfirst("action") == "login":
 		if login.validate(form):
-			print("Status: 302 See Other")
-			print(login.cookies)
-			print("Location: /")
-			print()
+			redirect_post()
+	elif form.getfirst("action") == "update_lunch":
+		cursor = conn.cursor()
+		try:
+			cursor.execute("SELECT u_id FROM users WHERE name = %s", (login.name(), ))
+			u_id = cursor.fetchone()[0]
+			items = form.getlist("food")
+			if cursor.execute("SELECT * FROM lunch WHERE u_id = %s", (u_id, )) == 0L:
+				cursor.execute("INSERT INTO lunch (u_id, buns, baloney, cheese, jam, cornflakes) " +
+									"VALUES (%s, %s, %s, %s, %s, %s)", (
+						u_id,
+						form.getfirst("buns", ""),
+						"baloney" in items,
+						"cheese" in items,
+						"jam" in items,
+						"cornflakes" in items
+					))
+			else:
+				cursor.execute("UPDATE lunch SET " +
+						"buns = %s, baloney = %s, cheese = %s, jam = %s, cornflakes = %s WHERE u_id = %s",
+					(
+						form.getfirst("buns", ""),
+						"baloney" in items,
+						"cheese" in items,
+						"jam" in items,
+						"cornflakes" in items,
+						u_id
+					))
+			conn.commit()
+		except Exception as err:
+			print("Status: 200 OK")
+			print("Content-Type: text/plain\r\n\r\n")
+			print(str(err))
 			sys.exit(0)
+		redirect_post()
 	elif form.getfirst("order") is not None:
 		cursor = conn.cursor()
 		try:
@@ -76,10 +112,7 @@ if __name__ == "__main__":
 			conn.commit()
 		except:
 			pass
-		print("Status: 302 See Other")
-		print("Location: /")
-		print()
-		sys.exit(0)
+		redirect_post()
 
 	print("Status: 200 OK")
 	print("Content-Type: text/html; charset=utf-8")

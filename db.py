@@ -42,4 +42,15 @@ def init(conf):
 			[ "FOREIGN KEY (u_id) REFERENCES users(u_id)" ]
 		)
 
+	create_table(conn, "lunch", [
+			"l_id INT PRIMARY KEY AUTO_INCREMENT",
+			"u_id INT",
+			"buns TEXT",
+			"baloney BOOLEAN",
+			"cheese BOOLEAN",
+			"jam BOOLEAN",
+			"cornflakes BOOLEAN" ],
+			[ "FOREIGN KEY (u_id) REFERENCES users(u_id)" ]
+		)
+
 	return conn
