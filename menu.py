@@ -21,6 +21,7 @@ def admin(conf, conn):
 		if cursor.execute("SELECT u_id FROM users WHERE name = %s", (form.getfirst("user", ""), )) == 1L:
 			uid = cursor.fetchone()[0]
 			cursor.execute("DELETE FROM shirts WHERE u_id = %s", (uid, ))
+			cursor.execute("DELETE FROM lunch WHERE u_id = %s", (uid, ))
 			cursor.execute("DELETE FROM users WHERE u_id = %s", (uid, ))
 			conn.commit()
 	elif form.getfirst("action") == "setthere":
