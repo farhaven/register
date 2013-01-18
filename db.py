@@ -1,14 +1,45 @@
 import MySQLdb
 
-statements = {
-		"table_create_users": "CREATE TABLE IF NOT EXISTS users (u_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, salt TEXT NOT NULL, pwhash TEXT NOT NULL, paid BOOLEAN NOT NULL, there BOOLEAN NOT NULL, UNIQUE(name(128)))",
-		"table_create_shirts": "CREATE TABLE IF NOT EXISTS shirts (s_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, u_id INT, size TEXT NOT NULL, FOREIGN KEY (u_id) REFERENCES users(u_id))"
+def create_table(conn, name, values, constraints):
+	s = "CREATE TABLE IF NOT EXISTS " + str(name) + " ("
+	for v in values[:-1]:
+		s += v + " NOT NULL, "
+	try:
+		s += values[-1] + " NOT NULL"
+	except:
+		pass
+	if (len(constraints)) != 0:
+		s += ", "
+	for c in constraints[:-1]:
+		s += c + ", "
+	try:
+		s += constraints[-1]
+	except:
+		pass
+	s += ")"
 
-}
+	c = conn.cursor()
+	c.execute(s)
+	conn.commit()
 
 def init(conf):
 	conn = MySQLdb.connect(user=conf.get("db_user"), passwd=conf.get("db_pass"), db=conf.get("db_database"))
-	c = conn.cursor()
-	c.execute(statements["table_create_users"])
-	c.execute(statements["table_create_shirts"])
+	create_table(conn, "users", [
+			"u_id INT PRIMARY KEY AUTO_INCREMENT",
+			"name TEXT",
+			"email TEXT",
+			"salt TEXT",
+			"pwhash TEXT",
+			"paid BOOLEAN",
+			"there BOOLEAN",
+			], [ "UNIQUE(name(128))" ]
+		)
+
+	create_table(conn, "shirts", [
+			"s_id INT PRIMARY KEY AUTO_INCREMENT",
+			"u_id INT",
+			"size TEXT" ],
+			[ "FOREIGN KEY (u_id) REFERENCES users(u_id)" ]
+		)
+
 	return conn
