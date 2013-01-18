@@ -45,7 +45,7 @@ def init(conf):
 	create_table(conn, "lunch", [
 			"l_id INT PRIMARY KEY AUTO_INCREMENT",
 			"u_id INT",
-			"buns TEXT",
+			"buns INT",
 			"baloney BOOLEAN",
 			"cheese BOOLEAN",
 			"jam BOOLEAN",
