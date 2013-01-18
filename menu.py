@@ -107,7 +107,6 @@ def main(login):
 	print(html.tb_row(["Payment received", ("Yes" if user["has_paid"] else "No")]))
 	print(html.tb_row(["Is there", ("Yes" if user["is_there"] else "No")]))
 	print(html.tb_row(["Email", user["email"]]))
-	print(html.tb_row(["Shirts", str(user["shirts"])]))
 	print("</table>")
 	print("<form method=\"POST\">")
 	print(html.f_hidden("action", "logout"))
@@ -121,10 +120,11 @@ def main(login):
 			items.append("<a href=\"?order=sub_" + size + "\">-</a>")
 		else:
 			items.append("-")
+		items.append(user["shirts"].count(size))
 		items.append("<a href=\"?order=add_" + size + "\">+</a>")
 		return html.tb_row(items)
 
-	print("<div><h2>Order shirts</h2>")
+	print("<div><h2>Shirt order</h2>")
 	print("<form method=\"POST\">")
 	print(html.f_hidden("order", "clear_all"))
 	print(html.f_submit("Clear order"))

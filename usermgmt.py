@@ -32,14 +32,6 @@ class Login(object):
 		cursor.execute("SELECT size FROM shirts WHERE u_id = %s", (result[0], ))
 		for x in cursor.fetchall():
 			rv["shirts"].append(x[0])
-		def extract_key(size):
-			if size == "S": return 1
-			if size == "M": return 2
-			if size == "L": return 3
-			if size == "XL": return 4
-			if size == "XXL": return 5
-			return float("infinity")
-		rv["shirts"] = sorted(rv["shirts"], key=extract_key)
 		if cursor.execute("SELECT buns, baloney, cheese, jam, cornflakes FROM lunch WHERE u_id = %s", (result[0], )) != 1L:
 			rv["lunch"]["buns"] = ""
 			rv["lunch"]["baloney"] = False
