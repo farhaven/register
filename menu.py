@@ -125,10 +125,6 @@ def main(login):
 		return html.tb_row(items)
 
 	print("<div><h2>Shirt order</h2>")
-	print("<form method=\"POST\">")
-	print(html.f_hidden("order", "clear_all"))
-	print(html.f_submit("Clear order"))
-	print("</form>")
 	print("<table>")
 	print(shirt_order_row("S"))
 	print(shirt_order_row("M"))
@@ -136,6 +132,10 @@ def main(login):
 	print(shirt_order_row("XL"))
 	print(shirt_order_row("XXL"))
 	print("</table>")
+	print("<form method=\"POST\">")
+	print(html.f_hidden("order", "clear_all"))
+	print(html.f_submit("Clear order"))
+	print("</form>")
 	print("</div>")
 
 	print("<div><h2>Lunch order (per day)</h2>")
