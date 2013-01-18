@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os
+import os.path
 import cgi
 import html
 import urllib
@@ -66,6 +67,17 @@ def admin(conf, conn):
 	cursor.execute("SELECT sum(buns), sum(baloney), sum(cheese), sum(jam), sum(cornflakes) FROM lunch");
 	print(html.tb_row(cursor.fetchone()))
 	print("</table></div>")
+
+	print("<h1>Admins</h1>")
+	print("<div><ul>")
+	try:
+		fh = open("../passwd", "r")
+		for l in fh.readlines():
+			print("<li>" + cgi.escape(l.split(":")[0]) + "</li>")
+		fh.close()
+	except:
+		pass
+	print("</ul></div>")
 
 	print("<div><h1>Misc info</h1>")
 	print("<p>Admins are registerd in <code>/www/register/passwd</code>, which is a htpasswd file. To add a new admin do the following:")
