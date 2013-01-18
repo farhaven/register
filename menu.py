@@ -60,6 +60,13 @@ def admin(conf, conn):
 		print(html.tb_row([user["name"], user["email"], tbl_del, tbl_paid, tbl_there, user["shirts"]]))
 	print("</table></div>")
 
+	print("<h1>Lunch orders</h1>")
+	print("<div><table>")
+	print(html.tb_row(["Buns", "Baloney", "Cheese", "Jam", "Cornflakes"], head=True))
+	cursor.execute("SELECT sum(buns), sum(baloney), sum(cheese), sum(jam), sum(cornflakes) FROM lunch");
+	print(html.tb_row(cursor.fetchone()))
+	print("</table></div>")
+
 	print("<div><h1>Misc info</h1>")
 	print("<p>Admins are registerd in <code>/www/register/passwd</code>, which is a htpasswd file. To add a new admin do the following:")
 	print("<pre>")
