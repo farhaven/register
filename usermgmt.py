@@ -91,7 +91,7 @@ def addUser(data, conn):
 		failures += "<li>Username already taken!</li>"
 	if failures != "":
 		#print("<h1>Creating user failed</h1>")
-		print("<div class=\"alert alert-failure\">Failed to create user:<ul>")
+		print("<div class=\"alert alert-error\">Failed to create user:<ul>")
 		print(failures)
 		print("</ul></div>")
 		return
