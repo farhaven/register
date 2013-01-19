@@ -7,11 +7,31 @@ import html
 import urllib
 
 def header():
-	s  = "<div class=\"header\">"
-	s += "<a href=\"/\">EH13</a>"
-	s += " <a href=\"/admin\">Admin</a>"
-	s += "</div>"
-	return s + "<hr>"
+	s  = "<div class=\"navbar navbar-inverse navbar-fixed-top\">"
+	s +=   "<div class=\"navbar-inner\"><div class=\"container\">"
+	s +=     "<a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".nav-collapse\">"
+	s +=       "<span class=\"icon-bar\"></span>"
+	s +=       "<span class=\"icon-bar\"></span>"
+	s +=       "<span class=\"icon-bar\"></span>"
+	s +=     "</a>"
+	s +=     "<a class=\"brand\" href=\"#\">EasterHegg 2013</a>"
+	s +=     "<div class=\"nav-collapse collapse\">"
+        s +=       "<ul class=\"nav\">"
+        s +=         "<li class=\"active\"><a href=\"#\">Home</a></li>"
+        s +=         "<li><a href=\"#about\">About</a></li>"
+        s +=         "<li><a href=\"#contact\">Contact</a></li>"
+        s +=       "</ul>"
+        s +=     "</div>"
+        s +=   "</div></div>"
+        s += "</div>"
+ 
+	s += "<div class=\"container\">"
+ 
+	return s
+
+def footer():
+	s  = "</div>"
+	return s
 
 def admin(conf, conn):
 	form = cgi.FieldStorage()

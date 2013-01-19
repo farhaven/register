@@ -122,13 +122,15 @@ if __name__ == "__main__":
 	print("<!DOCTYPE html>")
 	print("<head>")
 	# print("<style type=\"text/css\" src=\"/style.css\"/>")
-	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\">")
+	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/bootstrap.min.css\">")
+	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/eh13.css\">")
 	print("<title>")
 	print("EH13")
 	print("</title></head>")
 	print("<body>")
 
 	print(menu.header())
+
 	if "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin"):
 		menu.admin(conf, conn)
 	elif form.getfirst("action", "logout") == "logout":
@@ -141,4 +143,7 @@ if __name__ == "__main__":
 	else:
 		print("<pre>Unknown action: " + cgi.escape(form.getfirst("action", "")) + "</pre>")
 
+	print(menu.footer())
+
+        print("<script language=\"javascript\" src=\"/js/bootstrap.min.js\"></script>")
 	print("</body></html>")
