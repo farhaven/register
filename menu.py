@@ -16,7 +16,7 @@ def header(login, active="home"):
 	s +=     "</a>"
 	s +=     "<a class=\"brand\" href=\"#\">EasterHegg 2013</a>"
 	s +=     "<div class=\"nav-collapse collapse\">"
-        s +=       "<ul class=\"nav\">"
+	s +=       "<ul class=\"nav\">"
 	if (active != "ADMIN"):
 		if (login.valid()):
 			s += "<li class=\"" 
@@ -34,11 +34,10 @@ def header(login, active="home"):
 	else:
 		s += "<li class=\"\"><a href=\"/\">User-Mode</a></li>"
 		s += "<li class=\"active\"><a href=\"/admin\">ADMIN</a></li>"
-        s +=       "</ul>"
-        s +=     "</div>"
-        s +=   "</div></div>"
-        s += "</div>\n"
- 
+		s +=       "</ul>"
+		s +=     "</div>"
+	s +=   "</div></div>"
+	s += "</div>\n"
 	s += "<div class=\"container\">"
  
 	return s
