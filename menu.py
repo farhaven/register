@@ -17,6 +17,7 @@ def header(login, active="home"):
 	s +=     "<a class=\"brand\" href=\"#\">EasterHegg 2013</a>"
 	s +=     "<div class=\"nav-collapse collapse\">"
 	s +=       "<ul class=\"nav\">"
+	s +=         "<li class=\"\"><a href=\"http://eh13.c3pb.de/\" target=\"_blank\">Webseite</a></li>"
 	if (active != "ADMIN"):
 		if (login.valid()):
 			s += "<li class=\"" 
