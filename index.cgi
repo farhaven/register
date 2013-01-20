@@ -143,9 +143,9 @@ if __name__ == "__main__":
 	if is_admin:
 		menu.admin(conf, conn)
 	elif form.getfirst("action", "logout") == "logout":
-		menu.main(login)
+		menu.main(login, conf, conn)
 	elif form.getfirst("action") == "add_user":
-		usermgmt.addUser(form, conn)
+		usermgmt.addUser(form, conf, conn)
 	elif form.getfirst("action") == "login":
 		if not login.valid():
 			print("<div class=\"alert alert-error\">Login failed!</div>")
