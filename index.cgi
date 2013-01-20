@@ -124,6 +124,7 @@ if __name__ == "__main__":
 	print(login.cookies)
 	print()
 
+	custom_script = ""
 	print("<!DOCTYPE html>")
 	print("<head>")
 	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/bootstrap.min.css\">")
@@ -137,8 +138,14 @@ if __name__ == "__main__":
 	print(menu.header(login, form.getfirst("action") if not is_admin else "ADMIN"))
 
 	update = form.getfirst("update", "")
-	if update != "":
-		print("<div class=\"alert alert-info\">Your shirt order has been updated.</div>")
+	update_message = ""
+
+	if update == "shirts":
+		update_message = "Your shirt order has been updated."
+
+	if update_message != "":
+		print("<div id=\"update-alert\" class=\"alert alert-info\">" + update_message + "</div>")
+		custom_script += "$('div#update-alert').fadeOut(5000);";
 
 	if is_admin:
 		menu.admin(conf, conn)
@@ -155,4 +162,6 @@ if __name__ == "__main__":
 	print(menu.footer())
 
         print("<script language=\"javascript\" src=\"/js/bootstrap.min.js\"></script>")
+	if custom_script != "":
+		print ("<script language=\"javascript\"><!-- \n" + custom_script + "\n// --></script>");
 	print("</body></html>")
