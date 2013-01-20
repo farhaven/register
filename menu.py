@@ -175,7 +175,9 @@ def main(login, conf, conn):
 	#print("<h1>EH13 Registration</h1>")
 	# new user
 	if not login.valid():
-		print("<div class=\"well\"><h2>Log in</h2>")
+		print("<div class=\"row\">")
+
+		print("<div class=\"span6 well\"><h2>Log in</h2>")
 		print(html.form_start(box=False))
 		print(html.f_hidden("action", "login"))
 		print(html.form_input("login_name", "Name", "username"))
@@ -187,7 +189,7 @@ def main(login, conf, conn):
 		c = conn.cursor()
 		c.execute("SELECT count(*) FROM users")
 		if c.fetchone()[0] < conf.get("maxusers"):
-			print("<div class=\"well\"><h2>Neuer Benutzer</h2>")
+			print("<div class=\"span6 well\"><h2>Neuer Benutzer</h2>")
 			print(html.form_start(box=False))
 			print(html.f_hidden("action", "add_user"))
 			print(html.form_input("new_name", "Name", "username"))
@@ -198,9 +200,11 @@ def main(login, conf, conn):
 			print(html.form_end(box=False))
 			print("</div>")
 		else:
-			print("<div><h2>Registrierung geschlossen</h2>")
-			print("Die Registrierung ist geschlossen. Es sind schon " + str(conf.get("maxusers")) + " Wesen registriert. Sorry :(")
+			print("<div class=\"span6 well\"><h2>Registrierung geschlossen</h2>")
+			print("Die Registrierung ist geschlossen. Es sind schon min. " + str(conf.get("maxusers")) + " Wesen registriert. Sorry :(")
 			print("</div>")
+
+		print("</div>")
 		return
 
 	user = login.as_dict()
