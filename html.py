@@ -1,10 +1,13 @@
 import cgi
 
-def f_input(id, name, value="", size=None, password=False):
-	s  = "<input id=\"" + str(id) + "\" name=\"" + str(name) + \
+def f_input(id, name, value="", size=None, password=False, placeholder=None):
+	s  = "<input id=\"" + str(id) + "\" name=\"" + cgi.escape(name) + \
+	     "\" class=\"span3" + \
 	     "\" type=\"" + ("password" if password else "text")
 	if size != None:
 		s += "\" size=\"" + str(size) 
+	if placeholder != None:
+		s += "\" placeholder=\"" + cgi.escape(placeholder)
 	s += "\" value=\"" + str(value)
 	s += "\"/>"
 	return s
@@ -63,21 +66,21 @@ def form_row(id, label, controls):
 	s += "</div>"
 	return s
 
-def form_input(id, label, name, input_value="", icon=None):
-	code = f_input(id, name, value=input_value)
+def form_input(id, label, name, input_value="", icon=None, input_placeholder=None):
+	code = f_input(id, name, value=input_value, placeholder=input_placeholder)
 	if icon != None:
 		code = "<div class=\"input-prepend\"><span class=\"add-on\"><i class=\"icon-" + icon + "\"></i></span>" + code + "</div>"
 	return form_row(id, label, code)
 
-def form_password(id, label, name):
-	code = f_input(id, name, password=True)
+def form_password(id, label, name, password_hint=None):
+	code = f_input(id, name, password=True, placeholder=password_hint)
 	return form_row(id, label, code)
 
 def form_submit(value="OK"):
 	code = "<button type=\"submit\" class=\"btn btn-primary\">"
 	code += cgi.escape(value)
 	code += "</button>"
-	return code
+	return form_row(None, None, code)
 
 def colored_bool(value, yes="Ja", no="Nein"):
 	code = yes if value else no
