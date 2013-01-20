@@ -1,11 +1,13 @@
 import cgi
 
-def f_input(name, value="", size=20, password=False):
-	return "<input name=\"" + str(name) + \
-		"\" type=\"" + ("password" if password else "text") + \
-		"\" size=\"" + str(size) + \
-		"\" value=\"" + str(value) + \
-		"\"/>"
+def f_input(id, name, value="", size=None, password=False):
+	s  = "<input id=\"" + str(id) + "\" name=\"" + str(name) + \
+	     "\" type=\"" + ("password" if password else "text")
+	if size != None:
+		s += "\" size=\"" + str(size) 
+	s += "\" value=\"" + str(value)
+	s += "\"/>"
+	return s
 
 def f_checkbox(name, value, checked=False):
 	s = "<input name=\"" + str(name) + "\" type=\"checkbox\" value=\"" + value + "\""
@@ -40,3 +42,23 @@ def form(*items):
 		s += x
 	s += "</form>"
 	return s
+
+def form_row(id, label, controls):
+	s  = "<div class=\"control-group\">"
+	if label != None:
+		s +=   "<label class=\"control-label\""
+	if id != None:
+		s += "for=\"" + id + "\""
+		s += ">" + label + "</label>"
+	s +=   "<div class=\"controls\">" + controls + "</div>"
+	s += "</div>"
+	return s
+
+def form_input(id, label, name):
+	return form_row(id, label, f_input(id, name))
+
+def form_password(id, label, name):
+	return form_row(id, label, f_input(id, name, password=True))
+
+def form_submit(value=None):
+	return form_row(None, None, f_submit(value))

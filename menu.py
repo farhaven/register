@@ -6,12 +6,46 @@ import cgi
 import html
 import urllib
 
-def header():
-	s  = "<div class=\"header\">"
-	s += "<a href=\"/\">EH13</a>"
-	s += " <a href=\"/admin\">Admin</a>"
-	s += "</div>"
-	return s + "<hr>"
+def header(login, active="home"):
+	s  = "<div class=\"navbar navbar-inverse navbar-fixed-top\">"
+	s +=   "<div class=\"navbar-inner\"><div class=\"container\">"
+	s +=     "<a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".nav-collapse\">"
+	s +=       "<span class=\"icon-bar\"></span>"
+	s +=       "<span class=\"icon-bar\"></span>"
+	s +=       "<span class=\"icon-bar\"></span>"
+	s +=     "</a>"
+	s +=     "<a class=\"brand\" href=\"#\">EasterHegg 2013</a>"
+	s +=     "<div class=\"nav-collapse collapse\">"
+        s +=       "<ul class=\"nav\">"
+	if (active != "ADMIN"):
+		if (login.valid()):
+			s += "<li class=\"" 
+			s += "active" if active == "home" else ""
+			s += "\"><a href=\"#\">Home</a></li>"
+
+			#s += "<li><a href=\"#about\">About</a></li>"
+			#s += "<li><a href=\"#contact\">Contact</a></li>"
+
+			s += "<li class=\""
+			s += "active" if active == "logout" else ""
+			s += "\"><a href=\"/?action=logout\">Logout</a></li>"
+		else:
+			s += "<li class=\"active\">Login</li>"
+	else:
+		s += "<li class=\"\"><a href=\"/\">User-Mode</a></li>"
+		s += "<li class=\"active\"><a href=\"/admin\">ADMIN</a></li>"
+        s +=       "</ul>"
+        s +=     "</div>"
+        s +=   "</div></div>"
+        s += "</div>\n"
+ 
+	s += "<div class=\"container\">"
+ 
+	return s
+
+def footer():
+	s  = "</div>"
+	return s
 
 def admin(conf, conn):
 	form = cgi.FieldStorage()
@@ -99,25 +133,21 @@ def main(login):
 	# new user
 	if not login.valid():
 		print("<div><h2>Log in</h2>")
-		print("<form method=\"POST\">")
+		print("<form method=\"POST\" class=\"form-horizontal\">")
 		print(html.f_hidden("action", "login"))
-		print("<table>")
-		print(html.tb_row(["Name", html.f_input("username")]))
-		print(html.tb_row(["Password", html.f_input("password", password=True)]))
-		print(html.tb_row([None, html.f_submit()]))
-		print("</table>")
+		print(html.form_input("login_name", "Name", "username"))
+		print(html.form_password("login_pass", "Password", "password"))
+		print(html.form_submit())
 		print("</form></div>")
 
 		print("<div><h2>New user</h2>")
-		print("<form method=\"POST\">")
+		print("<form method=\"POST\" class=\"form-horizontal\">")
 		print(html.f_hidden("action", "add_user"))
-		print("<table>")
-		print(html.tb_row(["Name", html.f_input("username")]))
-		print(html.tb_row(["Mail", html.f_input("email")]))
-		print(html.tb_row(["Password", html.f_input("password", password=True)]))
-		print(html.tb_row(["Password (again)", html.f_input("password_again", password=True)]))
-		print(html.tb_row([None, html.f_submit()]))
-		print("</table>")
+		print(html.form_input("new_name", "Name", "username"))
+		print(html.form_input("new_mail", "E-Mail", "email"))
+		print(html.form_password("new_pass", "Password", "password"))
+		print(html.form_password("new_pass2", "Password (again)", "password_again"))
+		print(html.form_submit())
 		print("</form></div>")
 		return
 

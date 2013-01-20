@@ -3,14 +3,16 @@ REMOTE_PATH = /www/register/srv
 REMOTE_USER = root
 
 FILES=index.cgi \
-		menu.py \
-		html.py \
-		usermgmt.py \
-		db.py \
-		settings.json \
-		style.css
+		*.py \
+		settings.default.json \
+		css/*.css \
+		img/* \
+		js/*
 
 all: upload
+
+pack: $(FILES)
+	tar -cvzf eh13-register.tar.gz $?
 
 upload: $(FILES)
 	tar -c -f - $? | ssh $(REMOTE_USER)@$(REMOTE_HOST) "cd $(REMOTE_PATH); tar xv"

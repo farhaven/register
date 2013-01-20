@@ -90,8 +90,8 @@ def addUser(data, conn):
 	if cursor.execute("SELECT u_id FROM users WHERE name = %s", (name, )) != 0L:
 		failures += "<li>Username already taken!</li>"
 	if failures != "":
-		print("<h1>Creating user failed</h1>")
-		print("<div><ul>")
+		#print("<h1>Creating user failed</h1>")
+		print("<div class=\"alert alert-error\">Failed to create user:<ul>")
 		print(failures)
 		print("</ul></div>")
 		return
@@ -103,5 +103,5 @@ def addUser(data, conn):
 	rv = cursor.execute("INSERT INTO users (name, email, salt, pwhash) VALUES (%s, %s, %s, %s)",
 				(name, email, salt, m.hexdigest()))
 	conn.commit()
-	print("<h1>User created</h1>")
-	print("<div>Creation of user " + name + " was successful.</div>")
+	#print("<h1>User created</h1>")
+	print("<div class=\"alert alert-success\">Creation of user " + name + " was successful.</div>")

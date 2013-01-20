@@ -121,15 +121,17 @@ if __name__ == "__main__":
 
 	print("<!DOCTYPE html>")
 	print("<head>")
-	# print("<style type=\"text/css\" src=\"/style.css\"/>")
-	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\">")
+	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/bootstrap.min.css\">")
+	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/eh13.css\">")
 	print("<title>")
 	print("EH13")
 	print("</title></head>")
-	print("<body>")
+	print("<body>\n")
 
-	print(menu.header())
-	if "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin"):
+        is_admin = "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin")
+	print(menu.header(login, form.getfirst("action") if not is_admin else "ADMIN"))
+
+	if is_admin:
 		menu.admin(conf, conn)
 	elif form.getfirst("action", "logout") == "logout":
 		menu.main(login)
@@ -137,8 +139,11 @@ if __name__ == "__main__":
 		usermgmt.addUser(form, conn)
 	elif form.getfirst("action") == "login":
 		if not login.valid():
-			print("<h1>Login failed!</h1>")
+			print("<div class=\"alert alert-error\">Login failed!</div>")
 	else:
-		print("<pre>Unknown action: " + cgi.escape(form.getfirst("action", "")) + "</pre>")
+		print("<div class=\"alert alert-warning\">Unknown action: " + cgi.escape(form.getfirst("action", "")) + "</div>")
 
+	print(menu.footer())
+
+        print("<script language=\"javascript\" src=\"/js/bootstrap.min.js\"></script>")
 	print("</body></html>")
