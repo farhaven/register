@@ -2,8 +2,9 @@ import cgi
 
 def f_input(id, name, value="", size=None, password=False):
 	s  = "<input id=\"" + str(id) + "\" name=\"" + str(name) + \
-	     "\" type=\"" + ("password" if password else "text") 
-	s += "\" size=\"" + str(size) if size != None
+	     "\" type=\"" + ("password" if password else "text")
+	if size != None:
+		s += "\" size=\"" + str(size) 
 	s += "\" value=\"" + str(value)
 	s += "\"/>"
 	return s
@@ -46,7 +47,8 @@ def form_row(id, label, controls):
 	s  = "<div class=\"control-group\">"
 	if label != None:
 		s +=   "<label class=\"control-label\""
-		s += "for=\"" + id + "\"" if id != None
+	if id != None:
+		s += "for=\"" + id + "\""
 		s += ">" + label + "</label>"
 	s +=   "<div class=\"controls\">" + controls + "</div>"
 	s += "</div>"
@@ -56,7 +58,7 @@ def form_input(id, label, name):
 	return form_row(id, label, f_input(id, name))
 
 def form_password(id, label, name):
-	return form_row(id, label, f_input(id, name, password: true))
+	return form_row(id, label, f_input(id, name, password=True))
 
 def form_submit(value=None):
 	return form_row(None, None, f_submit(value))
