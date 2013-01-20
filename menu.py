@@ -223,7 +223,7 @@ def main(login, conf, conn):
 
 	print("<div class=\"row\">")
 
-	print("<div class=\"span6\">")
+	print("<div class=\"span6\"><div class=\"well well-small\">")
 
 	def shirt_order_row(size):
 		items = [ size ]
@@ -249,9 +249,9 @@ def main(login, conf, conn):
 	print(html.f_hidden("order", "clear_all"))
 	print(html.f_submit("Zur&uuml;cksetzen"))
 	print("</form>")
-	print("</div>")
+	print("</div></div>")
 
-	print("<div class=\"span6\">")
+	print("<div class=\"span6\"><div class=\"well well-small\">")
 	print("<h2>Frystyck (pro Tag)</h2>")
 	print("<form method=\"POST\">")
 	print(html.f_hidden("action", "update_lunch"))
@@ -266,6 +266,6 @@ def main(login, conf, conn):
 	print("</tbody></table>")
 	print(html.f_submit("Aktualisieren"))
 	print("</form>")
-	print("</div>")
+	print("</div></div>")
 
 	print("</div>")
