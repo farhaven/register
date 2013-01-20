@@ -161,7 +161,8 @@ if __name__ == "__main__":
 
 	print(menu.footer())
 
+	print("<script language=\"javascript\" src=\"/js/jquery.min.js\"></script>")
         print("<script language=\"javascript\" src=\"/js/bootstrap.min.js\"></script>")
 	if custom_script != "":
-		print ("<script language=\"javascript\"><!-- \n" + custom_script + "\n// --></script>");
+		print ("<script language=\"javascript\"><!-- \n$().ready(function { " + custom_script + " });\n// --></script>");
 	print("</body></html>")
