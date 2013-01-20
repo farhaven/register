@@ -100,7 +100,7 @@ if __name__ == "__main__":
 			print("Content-Type: text/plain\r\n\r\n")
 			print(str(err))
 			sys.exit(0)
-		redirect_post()
+		redirect_post(update="lunch")
 	elif form.getfirst("order") is not None:
 		cursor = conn.cursor()
 		try:
@@ -142,6 +142,8 @@ if __name__ == "__main__":
 
 	if update == "shirts":
 		update_message = "Your shirt order has been updated."
+	elif update == "lunch":
+		update_message = "Your lunch order has been updated."
 
 	if update_message != "":
 		print("<div id=\"update-alert\" class=\"alert alert-info\">" + update_message + "</div>")
