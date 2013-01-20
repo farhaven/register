@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
 	if update_message != "":
 		print("<div id=\"update-alert\" class=\"alert alert-info\">" + update_message + "</div>")
-		custom_script += "$('div#update-alert').fadeOut(5000);";
+		custom_script += "window.setTimeout(function() { $(\"div#update-alert\").fadeTo(500, 0).slideUp(500, function(){ $(this).remove(); }); }, 5000);";
 
 	if is_admin:
 		menu.admin(conf, conn)
