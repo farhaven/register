@@ -144,7 +144,7 @@ def main(login):
 		print("<form method=\"POST\" class=\"form-horizontal\">")
 		print(html.f_hidden("action", "add_user"))
 		print(html.form_input("new_name", "Name", "username"))
-		print(html.form_input("new_mail", "E-Mail", "email"))
+		print(html.form_input("new_mail", "E-Mail", "email", icon="envelope"))
 		print(html.form_password("new_pass", "Password", "password"))
 		print(html.form_password("new_pass2", "Password (again)", "password_again"))
 		print(html.form_submit())
