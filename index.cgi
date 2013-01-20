@@ -36,11 +36,14 @@ def redirect_https():
 		print()
 		sys.exit(0)
 
-def redirect_post(cookies=None):
+def redirect_post(cookies=None,update=None):
 	print("Status: 302 See Other")
 	if cookies is not None:
 		print(str(cookies))
-	print("Location: /")
+	if update == None:
+		print("Location: /")
+	else:
+		print("Location: /?update=" + update)
 	print()
 	sys.exit(0)
 
@@ -114,13 +117,14 @@ if __name__ == "__main__":
 			conn.commit()
 		except:
 			pass
-		redirect_post()
+		redirect_post(update="shirts")
 
 	print("Status: 200 OK")
 	print("Content-Type: text/html; charset=utf-8")
 	print(login.cookies)
 	print()
 
+	custom_script = ""
 	print("<!DOCTYPE html>")
 	print("<head>")
 	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/bootstrap.min.css\">")
@@ -132,6 +136,16 @@ if __name__ == "__main__":
 
 	is_admin = "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin")
 	print(menu.header(login, form.getfirst("action") if not is_admin else "ADMIN"))
+
+	update = form.getfirst("update", "")
+	update_message = ""
+
+	if update == "shirts":
+		update_message = "Your shirt order has been updated."
+
+	if update_message != "":
+		print("<div id=\"update-alert\" class=\"alert alert-info\">" + update_message + "</div>")
+		custom_script += "window.setTimeout(function() { $(\"div#update-alert\").fadeTo(500, 0).slideUp(500, function(){ $(this).remove(); }); }, 5000);";
 
 	if is_admin:
 		menu.admin(conf, conn)
@@ -147,5 +161,8 @@ if __name__ == "__main__":
 
 	print(menu.footer())
 
+	print("<script language=\"javascript\" src=\"/js/jquery.min.js\"></script>")
         print("<script language=\"javascript\" src=\"/js/bootstrap.min.js\"></script>")
+	if custom_script != "":
+		print ("<script language=\"javascript\"><!-- \n$().ready(function() { " + custom_script + " });\n// --></script>");
 	print("</body></html>")

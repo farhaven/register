@@ -21,7 +21,7 @@ def header(login, active="home"):
 	s +=       "<span class=\"icon-bar\"></span>"
 	s +=       "<span class=\"icon-bar\"></span>"
 	s +=     "</a>"
-	s +=     "<a class=\"brand\" href=\"/\">EasterHegg 2013</a>"
+	s +=     "<a class=\"brand\" href=\"/\">EasterHegg 2013 - Registration</a>"
 	s +=     "<div class=\"nav-collapse collapse\">"
 	s +=       "<ul class=\"nav\">"
 	s +=         "<li class=\"\"><a href=\"http://eh13.c3pb.de/\" target=\"_blank\">Webseite</a></li>"
@@ -166,7 +166,7 @@ def admin(conf, conn):
 	print("</div>")
 
 def main(login, conf, conn):
-	print("<h1>EH13 Registration</h1>")
+	#print("<h1>EH13 Registration</h1>")
 	# new user
 	if not login.valid():
 		print("<div class=\"well\"><h2>Log in</h2>")
