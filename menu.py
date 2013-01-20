@@ -67,7 +67,9 @@ def admin(conf, conn):
 		cursor.execute("UPDATE users SET paid = %s WHERE name = %s", (val, form.getfirst("user", "")))
 		conn.commit()
 
-	print("<h1>Users</h1>")
+	cursor.execute("SELECT count(*), sum(paid), sum(there) FROM users")
+	result = cursor.fetchone()
+	print("<h1>%d Users (%d paid, %d there)</h1>" % result)
 	print("<div><table>")
 	print(html.tb_row(["Name", "eMail", "Delete", "Paid", "Is there", "Shirts"], head=True))
 	cursor.execute("SELECT u_id, name, email, paid, there FROM users");
