@@ -14,7 +14,7 @@ def header(login, active="home"):
 	s +=       "<span class=\"icon-bar\"></span>"
 	s +=       "<span class=\"icon-bar\"></span>"
 	s +=     "</a>"
-	s +=     "<a class=\"brand\" href=\"#\">EasterHegg 2013</a>"
+	s +=     "<a class=\"brand\" href=\"/\">EasterHegg 2013</a>"
 	s +=     "<div class=\"nav-collapse collapse\">"
 	s +=       "<ul class=\"nav\">"
 	if (active != "ADMIN"):
