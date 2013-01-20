@@ -130,7 +130,7 @@ if __name__ == "__main__":
 	print("</title></head>")
 	print("<body>\n")
 
-        is_admin = "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin")
+	is_admin = "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin")
 	print(menu.header(login, form.getfirst("action") if not is_admin else "ADMIN"))
 
 	if is_admin:
