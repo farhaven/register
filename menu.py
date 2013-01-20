@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from __future__ import print_function
 
 import os
@@ -5,6 +7,11 @@ import os.path
 import cgi
 import html
 import urllib
+import smtplib
+import uuid
+import sys
+
+import traceback
 
 def header(login, active="home"):
 	s  = "<div class=\"navbar navbar-inverse navbar-fixed-top\">"
@@ -64,27 +71,54 @@ def admin(conf, conn):
 		rv = cursor.execute("UPDATE users SET there = %s WHERE name = %s", (val, form.getfirst("user", "")))
 		conn.commit()
 	elif form.getfirst("action") == "setpaid":
-		val = True if form.getfirst("value") == "yes" else False
-		cursor.execute("UPDATE users SET paid = %s WHERE name = %s", (val, form.getfirst("user", "")))
-		conn.commit()
+		try:
+			cursor.execute("SELECT u_id FROM users WHERE name = %s", (form.getfirst("user", ""), ))
+			uid = int(cursor.fetchone()[0])
+			val = True if form.getfirst("value") == "yes" else False
+			cursor.execute("UPDATE users SET paid = %s WHERE u_id = %s", (val, uid))
+			if val:
+				ticket = str(uuid.uuid4())
+				cursor.execute("UPDATE users SET ticket = %s WHERE u_id = %s", (ticket, uid))
+				cursor.execute("SELECT email FROM users WHERE u_id = %s", (uid, ))
+				rcpt = cursor.fetchone()[0]
+				msg  = "To: " + str(rcpt) + "\r\n"
+				msg += "Subject: Dein Easterhegg 2013 Ticket\r\n\r\n"
+				msg += "Hallo " + str(form.getfirst("user", "")) + "!\n\n"
+				msg += "Dein Ticket ist\n\t" + ticket + "\nBitte druck diese Mail aus und bring den Ausdruck zum Easterhegg mit,\n"
+				msg += "oder speicher diese Nachricht auf dem Mobilkommunikationsgerät deiner Wahl, um sie bei der Ankunft vorzeigen\n"
+				msg += "zu können\n"
+				msg += "Deine eh13-Orga"
+				s = smtplib.SMTP()
+				s.connect()
+				s.sendmail("register@eh13.c3pb.de", [ rcpt ], msg)
+				s.quit()
+		except Exception as err:
+			print("<div class=\"alert alert-error\"><pre>")
+			traceback.print_exc(file=sys.stdout)
+			print("</pre></div>")
+		finally:
+			conn.commit()
 
 	cursor.execute("SELECT count(*), sum(paid), sum(there) FROM users")
 	print("<h1>%d Benutzer (%d haben bezahlt, %d sind da)</h1>" % cursor.fetchone())
 	print("<div><table>")
-	print(html.tb_row(["Name", "eMail", "L&ouml;schen", "Hat bezahlt", "Ist da", "Shirts"], head=True))
-	cursor.execute("SELECT u_id, name, email, paid, there FROM users");
-	for x in cursor.fetchall():
+	print(html.tb_row(["Name", "eMail", "L&ouml;schen", "Hat bezahlt", "Ist da", "Shirts", "Ticket"], head=True))
+	cursor.execute("SELECT u_id, name, email, paid, there, ticket FROM users");
+	def key(x):
+		return str(x[1]).lower()
+	for x in sorted(cursor.fetchall(), key=key):
 		user = {
-				"name": x[1],
-				"email": x[2],
-				"has_paid": bool(x[3]),
-				"is_there": bool(x[4]),
-				"shirts": []
+			"name": x[1],
+			"email": x[2],
+			"has_paid": bool(x[3]),
+			"is_there": bool(x[4]),
+			"ticket": str(x[5]),
+			"shirts": []
 		}
 		cursor.execute("SELECT size FROM shirts WHERE u_id = %s", (x[0], ))
 		for s in cursor.fetchall():
 			user["shirts"].append(s[0])
-		tbl_del = "<a href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\">Delete</a>"
+		tbl_del = "<a href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\">L&ouml;schen</a>"
 		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(user["name"]) + "&value="
 		if user["has_paid"]:
 			tbl_paid += "no\">ja</a>"
@@ -95,7 +129,7 @@ def admin(conf, conn):
 			tbl_there += "no\">ja</a>"
 		else:
 			tbl_there += "yes\">nein</a>"
-		print(html.tb_row([user["name"], user["email"], tbl_del, tbl_paid, tbl_there, user["shirts"]]))
+		print(html.tb_row([user["name"], user["email"], tbl_del, tbl_paid, tbl_there, user["shirts"], user["ticket"]]))
 	print("</table></div>")
 
 	print("<h1>Frystyck</h1>")
@@ -167,9 +201,10 @@ def main(login, conf, conn):
 
 	print("<div><h2>Status f&uuml;r " + cgi.escape(user["name"]) + "</h2>")
 	print("<table>")
-	print(html.tb_row(["Bezahlt", ("Yes" if user["has_paid"] else "No")]))
-	print(html.tb_row(["Anwesend", ("Yes" if user["is_there"] else "No")]))
+	print(html.tb_row(["Bezahlt", ("Ja" if user["has_paid"] else "Nein")]))
+	print(html.tb_row(["Anwesend", ("Ja" if user["is_there"] else "Nein")]))
 	print(html.tb_row(["Email", user["email"]]))
+	print(html.tb_row(["Ticket", user["ticket"]]))
 	print("</table>")
 	print("</div>")
 

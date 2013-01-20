@@ -26,6 +26,7 @@ class Login(object):
 				"pwhash": result[4],
 				"has_paid": bool(result[5]),
 				"is_there": bool(result[6]),
+				"ticket": str(result[7]),
 				"shirts": [],
 				"lunch": {}
 		}
