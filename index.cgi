@@ -42,7 +42,7 @@ def redirect_post(cookies=None,update=None):
 		print(str(cookies))
 	if update == None:
 		print("Location: /")
-	else
+	else:
 		print("Location: /?update=" + update)
 	print()
 	sys.exit(0)
