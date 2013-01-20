@@ -24,13 +24,13 @@ def header(login, active="home"):
 	s +=     "<a class=\"brand\" href=\"/\">EasterHegg 2013 - Registration</a>"
 	s +=     "<div class=\"nav-collapse collapse\">"
 	s +=       "<ul class=\"nav\">"
-	s +=         "<li class=\"\"><a href=\"http://eh13.c3pb.de/\" target=\"_blank\">Webseite</a></li>"
 	if (active != "ADMIN"):
 		if (login.valid()):
 			s += "<li class=\"" 
 			s += "active" if active == "home" else ""
 			s += "\"><a href=\"#\">Home</a></li>"
 
+			s += "<li class=\"\"><a href=\"http://eh13.c3pb.de/\" target=\"_blank\">Webseite</a></li>"
 			#s += "<li><a href=\"#about\">About</a></li>"
 			#s += "<li><a href=\"#contact\">Contact</a></li>"
 
@@ -39,12 +39,14 @@ def header(login, active="home"):
 			s += "\"><a href=\"/?action=logout\">Logout</a></li>"
 		else:
 			s += "<li class=\"active\"><a href=\"#\">Login</a></li>"
-		s += "<li class=\"\"><a href=\"/admin\">Admin</a></li>"
+			s += "<li class=\"\"><a href=\"http://eh13.c3pb.de/\" target=\"_blank\">Webseite</a></li>"
 	else:
 		s += "<li class=\"\"><a href=\"/\">User-Mode</a></li>"
-		s += "<li class=\"active\"><a href=\"/admin\">Admin</a></li>"
-		s +=       "</ul>"
-		s +=     "</div>"
+	s +=       "</ul>"
+	s +=       "<ul class=\"nav pull-right\">"
+	s +=         "<li class=\"" + ("active" if active == "ADMIN" else "") + "\"><a href=\"/admin\">Admin</a></li>"
+	s +=       "</ul>"
+	s +=     "</div>"
 	s +=   "</div></div>"
 	s += "</div>\n"
 	s += "<div class=\"container\">"
