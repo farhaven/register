@@ -14,5 +14,5 @@ all: upload
 pack: $(FILES)
 	tar -cvzf eh13-register.tar.gz $?
 
-upload: $(FILES)
+upload: $(FILES) settings.json
 	tar -c -f - $? | ssh $(REMOTE_USER)@$(REMOTE_HOST) "cd $(REMOTE_PATH); tar xv"
