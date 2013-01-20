@@ -92,6 +92,8 @@ def admin(conf, conn):
 				s.connect()
 				s.sendmail("register@eh13.c3pb.de", [ rcpt ], msg)
 				s.quit()
+			else:
+				cursor.execute("UPDATE users SET ticket = NULL WHERE u_id = %s", (uid, ))
 		except Exception as err:
 			print("<div class=\"alert alert-error\"><pre>")
 			traceback.print_exc(file=sys.stdout)
