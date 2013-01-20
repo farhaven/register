@@ -76,7 +76,8 @@ def admin(conf, conn):
 			uid = int(cursor.fetchone()[0])
 			val = True if form.getfirst("value") == "yes" else False
 			cursor.execute("UPDATE users SET paid = %s WHERE u_id = %s", (val, uid))
-			if val:
+			cursor.execute("SELECT ticket FROM users WHERE u_id = %s", (uid, ))
+			if val and cursor.fetchone()[0] is None:
 				ticket = str(uuid.uuid4())
 				cursor.execute("UPDATE users SET ticket = %s WHERE u_id = %s", (ticket, uid))
 				cursor.execute("SELECT email FROM users WHERE u_id = %s", (uid, ))
@@ -92,7 +93,7 @@ def admin(conf, conn):
 				s.connect()
 				s.sendmail("register@eh13.c3pb.de", [ rcpt ], msg)
 				s.quit()
-			else:
+			elif not val:
 				cursor.execute("UPDATE users SET ticket = NULL WHERE u_id = %s", (uid, ))
 		except Exception as err:
 			print("<div class=\"alert alert-error\"><pre>")
