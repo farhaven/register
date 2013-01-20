@@ -66,14 +66,14 @@ def form_row(id, label, controls):
 	s += "</div>"
 	return s
 
-def form_input(id, label, name, input_value="", icon=None, input_placeholder=None):
-	code = f_input(id, name, value=input_value, placeholder=input_placeholder)
+def form_input(id, label, name, input_value="", icon=None, placeholder=None):
+	code = f_input(id, name, value=input_value, placeholder=placeholder)
 	if icon != None:
 		code = "<div class=\"input-prepend\"><span class=\"add-on\"><i class=\"icon-" + icon + "\"></i></span>" + code + "</div>"
 	return form_row(id, label, code)
 
-def form_password(id, label, name, password_hint=None):
-	code = f_input(id, name, password=True, placeholder=password_hint)
+def form_password(id, label, name, placeholder=None):
+	code = f_input(id, name, password=True, placeholder=placeholder)
 	return form_row(id, label, code)
 
 def form_submit(value="OK"):
