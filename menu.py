@@ -177,30 +177,30 @@ def main(login, conf, conn):
 	if not login.valid():
 		print("<div class=\"row\">")
 
-		print("<div class=\"span6 well\"><h2>Log in</h2>")
+		print("<div class=\"span6\"><div class=\"well well-small\"><h2>Log in</h2>")
 		print(html.form_start(box=False))
 		print(html.f_hidden("action", "login"))
 		print(html.form_input("login_name", "Name", "username"))
 		print(html.form_password("login_pass", "Password", "password"))
 		print(html.form_submit())
 		print(html.form_end(box=False))
-		print("</div>")
+		print("</div></div>")
 
 		c = conn.cursor()
 		c.execute("SELECT count(*) FROM users")
 		if c.fetchone()[0] < conf.get("maxusers"):
-			print("<div class=\"span6 well\"><h2>Neuer Benutzer</h2>")
+			print("<div class=\"span6\"><div class=\"well well-small\"><h2>Neuer Benutzer</h2>")
 			print(html.form_start(box=False))
 			print(html.f_hidden("action", "add_user"))
-			print(html.form_input("new_name", "Name", "username"))
-			print(html.form_input("new_mail", "E-Mail", "email", icon="envelope"))
-			print(html.form_password("new_pass", "Passwort", "password"))
+			print(html.form_input("new_name", "Name", "username", placeholder="Dein (Nick-)Name"))
+			print(html.form_input("new_mail", "E-Mail", "email", placeholder="user@chaos.hack"))
+			print(html.form_password("new_pass", "Passwort", "password", placeholder="fefe123"))
 			print(html.form_password("new_pass2", "Passwort (nochmal)", "password_again"))
 			print(html.form_submit())
 			print(html.form_end(box=False))
-			print("</div>")
+			print("</div></div>")
 		else:
-			print("<div class=\"span6 well\"><h2>Registrierung geschlossen</h2>")
+			print("<div class=\"span6\"><h2>Registrierung geschlossen</h2>")
 			print("Die Registrierung ist geschlossen. Es sind schon min. " + str(conf.get("maxusers")) + " Wesen registriert. Sorry :(")
 			print("</div>")
 
