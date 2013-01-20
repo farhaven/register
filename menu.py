@@ -14,7 +14,7 @@ def header(login, active="home"):
 	s +=       "<span class=\"icon-bar\"></span>"
 	s +=       "<span class=\"icon-bar\"></span>"
 	s +=     "</a>"
-	s +=     "<a class=\"brand\" href=\"#\">EasterHegg 2013</a>"
+	s +=     "<a class=\"brand\" href=\"/\">EasterHegg 2013</a>"
 	s +=     "<div class=\"nav-collapse collapse\">"
 	s +=       "<ul class=\"nav\">"
 	s +=         "<li class=\"\"><a href=\"http://eh13.c3pb.de/\" target=\"_blank\">Webseite</a></li>"
@@ -31,10 +31,11 @@ def header(login, active="home"):
 			s += "active" if active == "logout" else ""
 			s += "\"><a href=\"/?action=logout\">Logout</a></li>"
 		else:
-			s += "<li class=\"active\">Login</li>"
+			s += "<li class=\"active\"><a href=\"#\">Login</a></li>"
+		s += "<li class=\"\"><a href=\"/admin\">Admin</a></li>"
 	else:
 		s += "<li class=\"\"><a href=\"/\">User-Mode</a></li>"
-		s += "<li class=\"active\"><a href=\"/admin\">ADMIN</a></li>"
+		s += "<li class=\"active\"><a href=\"/admin\">Admin</a></li>"
 		s +=       "</ul>"
 		s +=     "</div>"
 	s +=   "</div></div>"
@@ -193,7 +194,7 @@ def main(login):
 	print("<form method=\"POST\">")
 	print(html.f_hidden("action", "update_lunch"))
 	print("<table>")
-	print(html.tb_row(["Buns", html.f_input("buns", value=user["lunch"]["buns"], size=10)]))
+	print(html.tb_row(["Buns", html.f_input("replaceme", "buns", value=user["lunch"]["buns"], size=10)]))
 	print(html.tb_row(["Baloney", html.f_checkbox("food", "baloney", user["lunch"]["baloney"])]))
 	print(html.tb_row(["Cheese", html.f_checkbox("food", "cheese", user["lunch"]["cheese"])]))
 	print(html.tb_row(["Jam", html.f_checkbox("food", "jam", user["lunch"]["jam"])]))

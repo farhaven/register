@@ -36,8 +36,10 @@ def redirect_https():
 		print()
 		sys.exit(0)
 
-def redirect_post():
+def redirect_post(cookies=None):
 	print("Status: 302 See Other")
+	if cookies is not None:
+		print(str(cookies))
 	print("Location: /")
 	print()
 	sys.exit(0)
@@ -61,7 +63,7 @@ if __name__ == "__main__":
 		login.clear()
 	elif form.getfirst("action") == "login":
 		if login.validate(form):
-			redirect_post()
+			redirect_post(str(login.cookies))
 	elif form.getfirst("action") == "update_lunch":
 		cursor = conn.cursor()
 		try:
@@ -128,7 +130,7 @@ if __name__ == "__main__":
 	print("</title></head>")
 	print("<body>\n")
 
-        is_admin = "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin")
+	is_admin = "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin")
 	print(menu.header(login, form.getfirst("action") if not is_admin else "ADMIN"))
 
 	if is_admin:
