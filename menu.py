@@ -210,7 +210,9 @@ def main(login, conf, conn):
 	print("<tbody>");
 	print("<tr class=\"" + ("success" if user["has_paid"] else "error") + "\"><td>Bezahlt</td><td>" + html.bool_icon(user["has_paid"]) + "</td></tr>")
 	print("<tr class=\"" + ("success" if user["is_there"] else "error") + "\"><td>Anwesend</td><td>" + html.bool_icon(user["is_there"]) + "</td></tr>")
-	print("<tr class=\"info\"><td>E-Mail</td><td>" + cgi.escape(user["email"]) + "</td>")
+	print("<tr class=\"info\"><td>E-Mail</td><td>" + cgi.escape(user["email"]) + "</td></tr>")
+	if user["ticket"] != None and user["ticket"] != "" and user["ticket"] != "None":
+		print("<tr class=\"info\"><td>Ticket</td><td>" + cgi.escape(user["ticket"]) + "</td></tr>")
 	print("</tbody></table>")
 	print("</div></div>")
 
