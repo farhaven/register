@@ -1,5 +1,6 @@
 {
 	"db_user": "user",
 	"db_pass": "pass",
-	"db_database": "database"
+	"db_database": "database",
+	"maxusers": 1000
 }

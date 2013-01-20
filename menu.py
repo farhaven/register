@@ -128,7 +128,7 @@ def admin(conf, conn):
 	print("</pre></p>")
 	print("</div>")
 
-def main(login):
+def main(login, conf, conn):
 	print("<h1>EH13 Registration</h1>")
 	# new user
 	if not login.valid():
@@ -140,15 +140,22 @@ def main(login):
 		print(html.form_submit())
 		print("</form></div>")
 
-		print("<div><h2>New user</h2>")
-		print("<form method=\"POST\" class=\"form-horizontal\">")
-		print(html.f_hidden("action", "add_user"))
-		print(html.form_input("new_name", "Name", "username"))
-		print(html.form_input("new_mail", "E-Mail", "email"))
-		print(html.form_password("new_pass", "Password", "password"))
-		print(html.form_password("new_pass2", "Password (again)", "password_again"))
-		print(html.form_submit())
-		print("</form></div>")
+		c = conn.cursor()
+		c.execute("SELECT count(*) FROM users")
+		if c.fetchone()[0] < conf.get("maxusers"):
+			print("<div><h2>New user</h2>")
+			print("<form method=\"POST\" class=\"form-horizontal\">")
+			print(html.f_hidden("action", "add_user"))
+			print(html.form_input("new_name", "Name", "username"))
+			print(html.form_input("new_mail", "E-Mail", "email"))
+			print(html.form_password("new_pass", "Password", "password"))
+			print(html.form_password("new_pass2", "Password (again)", "password_again"))
+			print(html.form_submit())
+			print("</form></div>")
+		else:
+			print("<div><h2>Registration closed</h2>")
+			print("Registration is closed, there are already " + str(conf.get("maxusers")) + " people registered. Sorry :(")
+			print("</div>")
 		return
 
 	user = login.as_dict()
@@ -159,10 +166,6 @@ def main(login):
 	print(html.tb_row(["Is there", ("Yes" if user["is_there"] else "No")]))
 	print(html.tb_row(["Email", user["email"]]))
 	print("</table>")
-	print("<form method=\"POST\">")
-	print(html.f_hidden("action", "logout"))
-	print(html.f_submit("Log out"))
-	print("</form>")
 	print("</div>")
 
 	def shirt_order_row(size):

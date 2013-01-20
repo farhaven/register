@@ -71,7 +71,7 @@ class Login(object):
 		m.update(user["salt"])
 		return user["pwhash"] == m.hexdigest()
 
-def addUser(data, conn):
+def addUser(data, conf, conn):
 	name = cgi.escape(data.getfirst("username", ""))
 	email = cgi.escape(data.getfirst("email", ""))
 	passwd = cgi.escape(data.getfirst("password", ""))
@@ -89,6 +89,9 @@ def addUser(data, conn):
 	cursor = conn.cursor()
 	if cursor.execute("SELECT u_id FROM users WHERE name = %s", (name, )) != 0L:
 		failures += "<li>Username already taken!</li>"
+	cursor.execute("SELECT count(*) FROM users")
+	if cursor.fetchone()[0] >= conf.get("maxusers"):
+		failures += "<li>There are already " + str(conf.get("maxusers")) + " registered users, registration is closed. Sorry :(</li>"
 	if failures != "":
 		#print("<h1>Creating user failed</h1>")
 		print("<div class=\"alert alert-error\">Failed to create user:<ul>")
