@@ -128,9 +128,10 @@ if __name__ == "__main__":
 	print("</title></head>")
 	print("<body>\n")
 
-	print(menu.header())
+        is_admin = "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin")
+	print(menu.header(login, form.getfirst("action") if not is_admin else "ADMIN"))
 
-	if "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin"):
+	if is_admin:
 		menu.admin(conf, conn)
 	elif form.getfirst("action", "logout") == "logout":
 		menu.main(login)

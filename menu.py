@@ -6,7 +6,7 @@ import cgi
 import html
 import urllib
 
-def header():
+def header(login, active="home"):
 	s  = "<div class=\"navbar navbar-inverse navbar-fixed-top\">"
 	s +=   "<div class=\"navbar-inner\"><div class=\"container\">"
 	s +=     "<a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".nav-collapse\">"
@@ -17,13 +17,27 @@ def header():
 	s +=     "<a class=\"brand\" href=\"#\">EasterHegg 2013</a>"
 	s +=     "<div class=\"nav-collapse collapse\">"
         s +=       "<ul class=\"nav\">"
-        s +=         "<li class=\"active\"><a href=\"#\">Home</a></li>"
-        s +=         "<li><a href=\"#about\">About</a></li>"
-        s +=         "<li><a href=\"#contact\">Contact</a></li>"
+	if (active != "ADMIN"):
+		if (login.valid()):
+			s += "<li class=\"" 
+			s += "active" if active == "home" else ""
+			s += "\"><a href=\"#\">Home</a></li>"
+
+			#s += "<li><a href=\"#about\">About</a></li>"
+			#s += "<li><a href=\"#contact\">Contact</a></li>"
+
+			s += "<li class=\""
+			s += "active" if active == "logout" else ""
+			s += "\"><a href=\"/?action=logout\">Logout</a></li>"
+		else:
+			s += "<li class=\"active\">Login</li>"
+	else:
+		s += "<li class=\"\"><a href=\"/\">User-Mode</a></li>"
+		s += "<li class=\"active\"><a href=\"/admin\">ADMIN</a></li>"
         s +=       "</ul>"
         s +=     "</div>"
         s +=   "</div></div>"
-        s += "</div>"
+        s += "</div>\n"
  
 	s += "<div class=\"container\">"
  
