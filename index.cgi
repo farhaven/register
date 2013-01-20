@@ -36,11 +36,14 @@ def redirect_https():
 		print()
 		sys.exit(0)
 
-def redirect_post(cookies=None):
+def redirect_post(cookies=None,update=None):
 	print("Status: 302 See Other")
 	if cookies is not None:
 		print(str(cookies))
-	print("Location: /")
+	if update == None:
+		print("Location: /")
+	else
+		print("Location: /?update=" + update)
 	print()
 	sys.exit(0)
 
@@ -114,7 +117,7 @@ if __name__ == "__main__":
 			conn.commit()
 		except:
 			pass
-		redirect_post()
+		redirect_post(update="shirts")
 
 	print("Status: 200 OK")
 	print("Content-Type: text/html; charset=utf-8")
@@ -132,6 +135,10 @@ if __name__ == "__main__":
 
 	is_admin = "REDIRECT_URL" in os.environ and os.environ["REDIRECT_URL"].startswith("/admin")
 	print(menu.header(login, form.getfirst("action") if not is_admin else "ADMIN"))
+
+	update = form.getfirst("update", "")
+	if update != "":
+		print("<div class=\"alert alert-info\">Your shirt order has been updated.</div>")
 
 	if is_admin:
 		menu.admin(conf, conn)
