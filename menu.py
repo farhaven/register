@@ -65,11 +65,12 @@ def admin(conf, conn):
 	print("<h1>Lunch orders</h1>")
 	print("<div><table>")
 	print(html.tb_row(["Buns", "Baloney", "Cheese", "Jam", "Cornflakes"], head=True))
-	cursor.execute("SELECT sum(buns), sum(baloney), sum(cheese), sum(jam), sum(cornflakes) FROM lunch");
+	cursor.execute("SELECT sum(buns), sum(baloney), sum(cheese), sum(jam), sum(cornflakes) FROM lunch")
 	print(html.tb_row(cursor.fetchone()))
 	print("</table></div>")
 
 	print("<h1>Admins</h1>")
+	print("<h2>Registered admins</h2>")
 	print("<div><ul>")
 	try:
 		fh = open("../passwd", "r")
@@ -80,7 +81,7 @@ def admin(conf, conn):
 		pass
 	print("</ul></div>")
 
-	print("<div><h1>Misc info</h1>")
+	print("<div><h2>Add a new admin</h2>")
 	print("<p>Admins are registerd in <code>/www/register/passwd</code>, which is a htpasswd file. To add a new admin do the following:")
 	print("<pre>")
 	print("$ ssh root@eh13.c3pb.de")
