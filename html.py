@@ -78,3 +78,16 @@ def form_submit(value="OK"):
 	code += cgi.escape(value)
 	code += "</button>"
 	return code
+
+def colored_bool(value, yes="Ja", no="Nein"):
+	code = yes if value else no
+	if value:
+		code = "<span class=\"yes\">" + code + "</span>"
+	else:
+		code = "<span class=\"no\">" + code + "</span>"
+	return code
+
+def bool_icon(value):
+	icon = "ok" if value else "remove"
+	return "<i class=\"icon-" + icon + "\"></i>"
+

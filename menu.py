@@ -165,14 +165,19 @@ def main(login, conf, conn):
 
 	user = login.as_dict()
 
-	print("<div><h2>Status f&uuml;r " + cgi.escape(user["name"]) + "</h2>")
-	print("<table>")
-	print(html.tb_row(["Bezahlt", ("Yes" if user["has_paid"] else "No")]))
-	print(html.tb_row(["Anwesend", ("Yes" if user["is_there"] else "No")]))
-	print(html.tb_row(["Email", user["email"]]))
-	print("</table>")
-	print("</div>")
+	print("<div class=\"row\"><div class=\"span12\">")
+	print("<table class=\"table userstatus\">")
+	print("<thead><tr><th colspan=\"2\">Status f&uuml;r " + cgi.escape(user["name"]) + "</th></tr></thead>");
+	print("<tbody>");
+	print("<tr class=\"" + ("success" if user["has_paid"] else "error") + "\"><td>Bezahlt</td><td>" + html.bool_icon(user["has_paid"]) + "</td></tr>")
+	print("<tr class=\"" + ("success" if user["is_there"] else "error") + "\"><td>Anwesend</td><td>" + html.bool_icon(user["is_there"]) + "</td></tr>")
+	print("<tr class=\"info\"><td>E-Mail</td><td>" + cgi.escape(user["email"]) + "</td>")
+	print("</tbody></table>")
+	print("</div></div>")
 
+	print("<div class=\"row\">")
+
+	print("<div class=\"span6\">")
 	def shirt_order_row(size):
 		items = [ size ]
 		if size in user["shirts"]:
@@ -183,30 +188,37 @@ def main(login, conf, conn):
 		items.append("<a href=\"?order=add_" + size + "\">+</a>")
 		return html.tb_row(items)
 
-	print("<div><h2>Shirts</h2>")
-	print("<table>")
+	print("<h2>Shirts</h2>")
+	print("<table class=\"table\">")
+	print("<thead><tr><th>Gr&ouml;&szlig;e</th><th colspan=\"3\">Menge</th></tr></thead>")
+	print("<tbody>")
 	print(shirt_order_row("S"))
 	print(shirt_order_row("M"))
 	print(shirt_order_row("L"))
 	print(shirt_order_row("XL"))
 	print(shirt_order_row("XXL"))
-	print("</table>")
+	print("</tbody></table>")
 	print("<form method=\"POST\">")
 	print(html.f_hidden("order", "clear_all"))
 	print(html.f_submit("Zur&uuml;cksetzen"))
 	print("</form>")
 	print("</div>")
 
-	print("<div><h2>Frystyck (pro Tag)</h2>")
+	print("<div class=\"span6\">")
+	print("<h2>Frystyck (pro Tag)</h2>")
 	print("<form method=\"POST\">")
 	print(html.f_hidden("action", "update_lunch"))
-	print("<table>")
+	print("<table class=\"table\">")
+	print("<thead><tr><th>Material</th><th>Menge</th></tr></thead>")
+	print("<tbody>")
 	print(html.tb_row(["Br&ouml;tchen", html.f_input("replaceme", "buns", value=user["lunch"]["buns"], size=10)]))
 	print(html.tb_row(["Wurst", html.f_checkbox("food", "baloney", user["lunch"]["baloney"])]))
 	print(html.tb_row(["K&auml;se", html.f_checkbox("food", "cheese", user["lunch"]["cheese"])]))
 	print(html.tb_row(["Marmelade", html.f_checkbox("food", "jam", user["lunch"]["jam"])]))
 	print(html.tb_row(["Cornflakes", html.f_checkbox("food", "cornflakes", user["lunch"]["cornflakes"])]))
-	print("</table>")
+	print("</tbody></table>")
 	print(html.f_submit("Aktualisieren"))
 	print("</form>")
+	print("</div>")
+
 	print("</div>")
