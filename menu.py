@@ -87,10 +87,11 @@ def admin(conf, conn):
 				msg  = "To: " + str(rcpt) + "\r\n"
 				msg += "Subject: Dein Easterhegg 2013 Ticket\r\n\r\n"
 				msg += "Hallo " + str(form.getfirst("user", "")) + "!\n\n"
-				msg += "Dein Ticket ist\n\t" + ticket + "\nBitte druck diese Mail aus und bring den Ausdruck zum Easterhegg mit,\n"
-				msg += "oder speicher diese Nachricht auf dem Mobilkommunikationsgerät deiner Wahl, um sie bei der Ankunft vorzeigen\n"
-				msg += "zu können\n"
-				msg += "Deine eh13-Orga"
+				msg += "Dein Ticket ist\n\n\t" + ticket + "\n\n"
+				msg += "Bitte druck diese Mail aus und bring den Ausdruck zum Easterhegg mit,\n"
+				msg += "oder speicher diese Nachricht auf dem Mobilkommunikationsgerät deiner\n"
+				msg += "Wahl, um sie bei der Ankunft vorzeigen zu können.\n\n"
+				msg += "\tDeine eh13-Orga"
 				s = smtplib.SMTP()
 				s.connect()
 				s.sendmail("register@eh13.c3pb.de", [ rcpt ], msg)
