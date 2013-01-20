@@ -130,31 +130,32 @@ def admin(conf, conn):
 	print("</div>")
 
 def main(login):
-	print("<h1>EH13 Registration</h1>")
 	# new user
 	if not login.valid():
-		print("<div><h2>Log in</h2>")
-		print("<form method=\"POST\" class=\"form-horizontal\">")
+		print("<div class=\"well\"><h2>Log in</h2>")
+		print(html.form_start(box=False))
 		print(html.f_hidden("action", "login"))
 		print(html.form_input("login_name", "Name", "username"))
 		print(html.form_password("login_pass", "Password", "password"))
 		print(html.form_submit())
-		print("</form></div>")
+		print(html.form_end(box=False))
+		print("</div>")
 
-		print("<div><h2>New user</h2>")
-		print("<form method=\"POST\" class=\"form-horizontal\">")
+		print("<div class=\"well\"><h2>New user</h2>")
+		print(html.form_start(box=False))
 		print(html.f_hidden("action", "add_user"))
 		print(html.form_input("new_name", "Name", "username"))
 		print(html.form_input("new_mail", "E-Mail", "email", icon="envelope"))
 		print(html.form_password("new_pass", "Password", "password"))
 		print(html.form_password("new_pass2", "Password (again)", "password_again"))
 		print(html.form_submit())
-		print("</form></div>")
+		print(html.form_end(box=False))
+		print("</div>")
 		return
 
 	user = login.as_dict()
 
-	print("<div><h2>User status for " + user["name"] + "</h2>")
+	print("<div><h2>User status for " + cgi.escape(user["name"]) + "</h2>")
 	print("<table>")
 	print(html.tb_row(["Payment received", ("Yes" if user["has_paid"] else "No")]))
 	print(html.tb_row(["Is there", ("Yes" if user["is_there"] else "No")]))

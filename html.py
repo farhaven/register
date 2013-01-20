@@ -37,11 +37,20 @@ def tb_row(fields, head=False):
 	return s + "</tr>"
 
 def form(*items):
-	s  = "<form method=\"POST\">"
+	s  = form_start()
 	for x in items:
 		s += x
-	s += "</form>"
+	s += form_end()
 	return s
+
+def form_start(box=True):
+	s = "<form method=\"POST\" class=\"form-horizontal\">"
+	if box:
+		s = "<div class=\"well\">" + s
+	return s
+
+def form_end(box=True):
+	return "</form></div>" if box else "</form>"
 
 def form_row(id, label, controls):
 	s  = "<div class=\"control-group\">"
@@ -65,4 +74,8 @@ def form_password(id, label, name):
 	return form_row(id, label, code)
 
 def form_submit(value=None):
-	return form_row(None, None, f_submit(value))
+	code = "<button type=\"submit\" class=\"btn btn-primary\""
+	if value != None:
+		code += " value=\"" + cgi.escape(value) + "\""
+	code += ">"
+	return code
