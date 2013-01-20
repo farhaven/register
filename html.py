@@ -37,11 +37,20 @@ def tb_row(fields, head=False):
 	return s + "</tr>"
 
 def form(*items):
-	s  = "<form method=\"POST\">"
+	s  = form_start()
 	for x in items:
 		s += x
-	s += "</form>"
+	s += form_end()
 	return s
+
+def form_start(box=True):
+	s = "<form method=\"POST\" class=\"form-horizontal\">"
+	if box:
+		s = "<div class=\"well\">" + s
+	return s
+
+def form_end(box=True):
+	return "</form></div>" if box else "</form>"
 
 def form_row(id, label, controls):
 	s  = "<div class=\"control-group\">"
@@ -54,11 +63,19 @@ def form_row(id, label, controls):
 	s += "</div>"
 	return s
 
-def form_input(id, label, name):
-	return form_row(id, label, f_input(id, name))
+def form_input(id, label, name, input_value="", icon=None):
+	code = f_input(id, name, value=input_value))
+	if icon != None:
+		code = "<div class=\"input-prepend\"><span class=\"add-on\"><i class=\"icon-" + icon + "\"></i></span>" + code + "</div>"
+	return form_row(id, label, code)
 
 def form_password(id, label, name):
-	return form_row(id, label, f_input(id, name, password=True))
+	code = f_input(id, name, password=True)
+	return form_row(id, label, code)
 
 def form_submit(value=None):
-	return form_row(None, None, f_submit(value))
+	code = "<button type=\"submit\" class=\"btn btn-primary\""
+	if value != None:
+		code += " value=\"" + cgi.escape(value) + "\""
+	code += ">"
+	return code

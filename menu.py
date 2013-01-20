@@ -17,6 +17,7 @@ def header(login, active="home"):
 	s +=     "<a class=\"brand\" href=\"/\">EasterHegg 2013</a>"
 	s +=     "<div class=\"nav-collapse collapse\">"
 	s +=       "<ul class=\"nav\">"
+	s +=         "<li class=\"\"><a href=\"http://eh13.c3pb.de/\" target=\"_blank\">Webseite</a></li>"
 	if (active != "ADMIN"):
 		if (login.valid()):
 			s += "<li class=\"" 
@@ -134,26 +135,28 @@ def main(login, conf, conn):
 	print("<h1>EH13 Registration</h1>")
 	# new user
 	if not login.valid():
-		print("<div><h2>Log in</h2>")
-		print("<form method=\"POST\" class=\"form-horizontal\">")
+		print("<div class=\"well\"><h2>Log in</h2>")
+		print(html.form_start(box=False))
 		print(html.f_hidden("action", "login"))
 		print(html.form_input("login_name", "Name", "username"))
 		print(html.form_password("login_pass", "Password", "password"))
 		print(html.form_submit())
-		print("</form></div>")
+		print(html.form_end(box=False))
+		print("</div>")
 
 		c = conn.cursor()
 		c.execute("SELECT count(*) FROM users")
 		if c.fetchone()[0] < conf.get("maxusers"):
-			print("<div><h2>Neuer Benutzer</h2>")
-			print("<form method=\"POST\" class=\"form-horizontal\">")
+			print("<div class=\"well\"><h2>Neuer Benutzer</h2>")
+			print(html.form_start(box=False))
 			print(html.f_hidden("action", "add_user"))
 			print(html.form_input("new_name", "Name", "username"))
-			print(html.form_input("new_mail", "E-Mail", "email"))
+			print(html.form_input("new_mail", "E-Mail", "email", icon="envelope"))
 			print(html.form_password("new_pass", "Passwort", "password"))
 			print(html.form_password("new_pass2", "Passwort (nochmal)", "password_again"))
 			print(html.form_submit())
-			print("</form></div>")
+			print(html.form_end(box=False))
+			print("</div>")
 		else:
 			print("<div><h2>Registrierung geschlossen</h2>")
 			print("Die Registrierung ist geschlossen. Es sind schon " + str(conf.get("maxusers")) + " Wesen registriert. Sorry :(")
@@ -162,7 +165,7 @@ def main(login, conf, conn):
 
 	user = login.as_dict()
 
-	print("<div><h2>Status f&uuml;r " + user["name"] + "</h2>")
+	print("<div><h2>Status f&uuml;r " + cgi.escape(user["name"]) + "</h2>")
 	print("<table>")
 	print(html.tb_row(["Bezahlt", ("Yes" if user["has_paid"] else "No")]))
 	print(html.tb_row(["Anwesend", ("Yes" if user["is_there"] else "No")]))
