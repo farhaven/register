@@ -63,8 +63,8 @@ def form_row(id, label, controls):
 	s += "</div>"
 	return s
 
-def form_input(id, label, name, value="", icon=None):
-	code = f_input(id, name, value=value))
+def form_input(id, label, name, input_value="", icon=None):
+	code = f_input(id, name, value=input_value))
 	if icon != None:
 		code = "<div class=\"input-prepend\"><span class=\"add-on\"><i class=\"icon-" + icon + "\"></i></span>" + code + "</div>"
 	return form_row(id, label, code)
