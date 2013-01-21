@@ -106,7 +106,6 @@ def addUser(data, conf, conn):
 	rv = cursor.execute("INSERT INTO users (name, email, salt, pwhash) VALUES (%s, %s, %s, %s)",
 				(name, email, salt, m.hexdigest()))
 	conn.commit()
-	#print("<h1>User created</h1>")
 
 	msg  = "To: " + str(email) + "\n"
 	msg += "Subject: Willkommen\n"
