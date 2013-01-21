@@ -38,7 +38,7 @@ def header(login, active="home"):
 			s += "active" if active == "logout" else ""
 			s += "\"><a href=\"/?action=logout\">Logout</a></li>"
 		else:
-			s += "<li class=\"active\"><a href=\"#\">Login</a></li>"
+			s += "<li class=\"active\"><a href=\"/\">Login</a></li>"
 			s += "<li class=\"\"><a href=\"http://eh13.c3pb.de/\" target=\"_blank\">Webseite</a></li>"
 	else:
 		s += "<li class=\"\"><a href=\"/\">User-Mode</a></li>"
