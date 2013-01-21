@@ -126,7 +126,9 @@ def addUser(data, conf, conn):
 	msg += "\tKto-Nr : 8744126200\n"
 	msg += "\tBLZ    : 47260121 (Volksbank Paderborn)\n"
 	msg += "\tZweck  : EasterHegg 2013 Teilnehmer \"" + str(name) + "\"\n\n"
-	msg += "Deine eh13-Orga"
+	msg += "Deine eh13-Orga\n\n"
+	msg += "P.S: Wenn du dich nicht registriert hast, melde dich bitte bei\n"
+	msg += "root@eh13.c3pb.de, damit wir dich aus der Datenbank austragen können."
 
 	try:
 		s = smtplib.SMTP()
