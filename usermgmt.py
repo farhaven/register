@@ -1,6 +1,9 @@
+# coding=utf-8
+
 import cgi
 import random
 import hashlib
+import smtplib
 
 import menu
 
@@ -109,3 +112,26 @@ def addUser(data, conf, conn):
 	conn.commit()
 	#print("<h1>User created</h1>")
 	print("<div class=\"alert alert-success\">Creation of user " + name + " was successful.</div>")
+
+	msg  = "To: " + str(email) + "\r\n"
+	msg += "Subject: Willkommen\r\n\r\n" # TODO
+	msg += "Hallo " + str(name) + ",\n\n"
+	msg += "deine Registrierung war erfolgreich. Du kannst auf\n"
+	msg += "https://register.eh13.c3pb.de deinen Bezahlstatus einsehen\n"
+	msg += "und deine Frühstücks- und Shirtbestellung verwalten.\n\n"
+	msg += "Überweise bitte die 42 Euro für das Ticket an das folgende Konto:\n\n"
+	msg += "\tInhaber: C3PB e.V.\n"
+	msg += "\tKto-Nr : 8744126200\n"
+	msg += "\tBLZ    : 47260121 (Volksbank Paderborn)\n"
+	msg += "\tZweck  : EasterHegg 2013 Teilnehmer \"" + str(name) + "\"\n\n"
+	msg += "Deine eh13-Orga"
+
+	try:
+		s = smtplib.SMTP()
+		s.connect()
+		s.sendmail("register@eh13.c3pb.de", [ email ], msg)
+		s.quit()
+	except Exception as err:
+		print("<div class=\"alert alert-failure\"><pre>")
+		print(str(err))
+		print("</pre></div>")
