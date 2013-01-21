@@ -137,6 +137,8 @@ if __name__ == "__main__":
 		update_message = "Your shirt order has been updated."
 	elif update == "lunch":
 		update_message = "Your lunch order has been updated."
+	elif update == "newuser":
+		update_message = "User account created successfully :-)""
 
 	if update_message != "":
 		print("<div id=\"update-alert\" class=\"alert alert-info\">" + update_message + "</div>")
