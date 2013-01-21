@@ -97,11 +97,7 @@ def addUser(data, conf, conn):
 	if cursor.fetchone()[0] >= conf.get("maxusers"):
 		failures += "<li>There are already " + str(conf.get("maxusers")) + " registered users, registration is closed. Sorry :(</li>"
 	if failures != "":
-		#print("<h1>Creating user failed</h1>")
-		print("<div class=\"alert alert-error\">Failed to create user:<ul>")
-		print(failures)
-		print("</ul></div>")
-		return
+		return "<ul>" + failures + "</ul>"
 
 	salt = str(random.random())
 	m = hashlib.sha1()
@@ -111,7 +107,6 @@ def addUser(data, conf, conn):
 				(name, email, salt, m.hexdigest()))
 	conn.commit()
 	#print("<h1>User created</h1>")
-	print("<div class=\"alert alert-success\">Creation of user " + name + " was successful.</div>")
 
 	msg  = "To: " + str(email) + "\n"
 	msg += "Subject: Willkommen\n"
@@ -137,6 +132,5 @@ def addUser(data, conf, conn):
 		s.sendmail("register@eh13.c3pb.de", [ email ], msg)
 		s.quit()
 	except Exception as err:
-		print("<div class=\"alert alert-failure\"><pre>")
-		print(str(err))
-		print("</pre></div>")
+		return str(err)
+	return None

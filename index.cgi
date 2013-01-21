@@ -33,6 +33,7 @@ class Config(object):
 if __name__ == "__main__":
 	conf = Config()
 	conn = db.init(conf)
+	errors = None
 
 	if "REQUEST_URI" in os.environ:
 		q = os.environ["REQUEST_URI"].split('?', 2)
@@ -83,6 +84,10 @@ if __name__ == "__main__":
 			print(str(err))
 			sys.exit(0)
 		redirect.post(update="lunch")
+	elif form.getfirst("action") == "add_user":
+		errors = usermgmt.addUser(form, conf, conn)
+		if errors is None:
+			redirect.post(update="newuser")
 	elif form.getfirst("order") is not None:
 		cursor = conn.cursor()
 		try:
@@ -128,18 +133,20 @@ if __name__ == "__main__":
 	elif update == "lunch":
 		update_message = "Your lunch order has been updated."
 	elif update == "newuser":
-		update_message = "User account created successfully :-)""
+		update_message = "User account created successfully :-)"
 
 	if update_message != "":
 		print("<div id=\"update-alert\" class=\"alert alert-info\">" + update_message + "</div>")
 		custom_script += "window.setTimeout(function() { $(\"div#update-alert\").fadeTo(500, 0).slideUp(500, function(){ $(this).remove(); }); }, 5000);";
 
-	if is_admin:
+	if errors is not None:
+		print("<div class=\"alert alert-error\">")
+		print(str(errors))
+		print("</div>")
+	elif is_admin:
 		menu.admin(conf, conn)
 	elif form.getfirst("action", "logout") == "logout":
 		menu.main(login, conf, conn)
-	elif form.getfirst("action") == "add_user":
-		usermgmt.addUser(form, conf, conn)
 	elif form.getfirst("action") == "login":
 		if not login.valid():
 			print("<div class=\"alert alert-error\">Login failed!</div>")
