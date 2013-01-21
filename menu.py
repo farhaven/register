@@ -192,7 +192,7 @@ def main(login, conf, conn):
 			print("<div class=\"span6\"><div class=\"well well-small\"><h2>Neuer Benutzer</h2>")
 			print(html.form_start(box=False))
 			print(html.f_hidden("action", "add_user"))
-			print(html.form_input("new_name", "Name", "username", placeholder="Dein (Nick-)Name"))
+			print(html.form_input("new_name", "Name", "username", placeholder="bernd"))
 			print(html.form_input("new_mail", "E-Mail", "email", placeholder="user@chaos.hack"))
 			print(html.form_password("new_pass", "Passwort", "password", placeholder="fefe123"))
 			print(html.form_password("new_pass2", "Passwort (nochmal)", "password_again"))
@@ -211,13 +211,17 @@ def main(login, conf, conn):
 
 	print("<div class=\"row\"><div class=\"span12\">")
 	print("<table class=\"table userstatus\">")
-	print("<thead><tr><th colspan=\"2\">Status f&uuml;r " + cgi.escape(user["name"]) + "</th></tr></thead>");
+	print("<thead><tr><th colspan=\"2\">Status f&uuml;r " + cgi.escape(user["name"]) + " &lt;" + cgi.escape(user["email"]) + "&gt;</th></tr></thead>");
 	print("<tbody>");
-	print("<tr class=\"" + ("success" if user["has_paid"] else "error") + "\"><td>Bezahlt</td><td>" + html.bool_icon(user["has_paid"]) + "</td></tr>")
+	print("<tr class=\"" + ("success" if user["has_paid"] else "error") + "\"><td>Bezahlt</td><td>" + html.bool_icon(user["has_paid"]))
+	if user["has_paid"]:
+		if user["ticket"] != None and user["ticket"] != "" and user["ticket"] != "None":
+			print("<span class=\"ticket\">Ticket: " + cgi.escape(user["ticket"]) + "</span>")
+		print(" (<a href=\"#kontoinfo\" role=\"button\" data-toggle=\"modal\" title=\"Konto-Information erneut einblenden\">Konto-Info</a>)")
+	else:
+		print("&Uuml;berweise 42&euro; auf das Konto des <a href=\"#kontoinfo\" role=\"button\" data-toggle=\"modal\" title=\"Konto-Information einblenden\">C3PB e.V.</a>")
+	print("</td></tr>")
 	print("<tr class=\"" + ("success" if user["is_there"] else "error") + "\"><td>Anwesend</td><td>" + html.bool_icon(user["is_there"]) + "</td></tr>")
-	print("<tr class=\"info\"><td>E-Mail</td><td>" + cgi.escape(user["email"]) + "</td></tr>")
-	if user["ticket"] != None and user["ticket"] != "" and user["ticket"] != "None":
-		print("<tr class=\"info\"><td>Ticket</td><td>" + cgi.escape(user["ticket"]) + "</td></tr>")
 	print("</tbody></table>")
 	print("</div></div>")
 
@@ -268,4 +272,21 @@ def main(login, conf, conn):
 	print("</form>")
 	print("</div></div>")
 
+	print("</div>")
+
+	print("<div id=\"kontoinfo\" class=\"modal hide fade\" role=\"dialog\" aria-hidden=\"True\" aria-labelledby=\"kontoinfoDlgCaption\">")
+	print(  "<div class=\"modal-header\">")
+	print(    "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">×</button>")
+	print(    "<h3 id=\"kontoinfoDlgCaption\">Kontoinformation</h3>")
+	print(  "</div>")
+	print(  "<div class=\"modal-body\">")
+	print(    "<p>Bitte überweise die 42€ Teilnehmerbeitrag auf folgendes Konto. Im Preis enthalten sind eine Tasse sowie das erweiterte Frühstück.</p>")
+	print(    "<table class=\"table\"><thead><tr><th colspan=\"2\">Konto-Daten</th></tr></thead><tbody>")
+	print(      "<tr><td>Konto-Inhaber</td><td>C3PB e.V.</td></tr>")
+	print(      "<tr><td>Konto-Nummer</td><td>8744126200</td></tr>")
+	print(      "<tr><td>Bank</td><td>Volksbank Paderborn (BLZ 47260121)</td></tr>")
+	print(      "<tr><td>Verwendungszweck</td><td>EasterHegg 2013 Teilnehmer \"" + user["name"] + "\"</td></tr>")
+	print(    "</tbody></table>")
+	print(  "</div>")
+	print(  "<div class=\"modal-footer\"><button class=\"btn btn-primary\" data-dismiss=\"modal\" aria-hidden=\"true\">OK</button></div>")
 	print("</div>")
