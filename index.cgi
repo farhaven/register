@@ -13,6 +13,7 @@ import json
 import db
 import menu
 import usermgmt
+import redirect
 
 class Config(object):
 	def __init__(self):
@@ -28,17 +29,6 @@ class Config(object):
 		if n in self.dict:
 			return self.dict[n]
 		return None
-
-def redirect_post(cookies=None,update=None):
-	print("Status: 302 See Other")
-	if cookies is not None:
-		print(str(cookies))
-	if update == None:
-		print("Location: /")
-	else:
-		print("Location: /?update=" + update)
-	print()
-	sys.exit(0)
 
 if __name__ == "__main__":
 	conf = Config()
@@ -58,7 +48,7 @@ if __name__ == "__main__":
 		login.clear()
 	elif form.getfirst("action") == "login":
 		if login.validate(form):
-			redirect_post(str(login.cookies))
+			redirect.post(str(login.cookies))
 	elif form.getfirst("action") == "update_lunch":
 		cursor = conn.cursor()
 		try:
@@ -92,7 +82,7 @@ if __name__ == "__main__":
 			print("Content-Type: text/plain\r\n\r\n")
 			print(str(err))
 			sys.exit(0)
-		redirect_post(update="lunch")
+		redirect.post(update="lunch")
 	elif form.getfirst("order") is not None:
 		cursor = conn.cursor()
 		try:
@@ -109,7 +99,7 @@ if __name__ == "__main__":
 			conn.commit()
 		except:
 			pass
-		redirect_post(update="shirts")
+		redirect.post(update="shirts")
 
 	print("Status: 200 OK")
 	print("Content-Type: text/html; charset=utf-8")
