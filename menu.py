@@ -28,7 +28,7 @@ def header(login, active="home"):
 		if (login.valid()):
 			s += "<li class=\"" 
 			s += "active" if active == "home" else ""
-			s += "\"><a href=\"#\">Home</a></li>"
+			s += "\"><a href=\"/\">Home</a></li>"
 
 			s += "<li class=\"\"><a href=\"http://eh13.c3pb.de/\" target=\"_blank\">Webseite</a></li>"
 			#s += "<li><a href=\"#about\">About</a></li>"
