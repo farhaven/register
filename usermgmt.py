@@ -127,7 +127,7 @@ def addUser(data, conf, conn):
 	msg += "limitiertes Kontingent an Tickets.\n\n"
 	msg += "Deine eh13-Orga\n\n"
 	msg += "P.S: Wenn du dich nicht registriert hast, melde dich bitte bei\n"
-	msg += "root@eh13.c3pb.de, damit wir dich aus der Datenbank austragen können."
+	msg += "orga@eh13.c3pb.de, damit wir dich aus der Datenbank austragen können."
 
 	try:
 		s = smtplib.SMTP()
