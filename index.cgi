@@ -126,6 +126,7 @@ if __name__ == "__main__":
 
 	custom_script = ""
 	print("<!DOCTYPE html>")
+	print("<html>")
 	print("<head>")
 	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/bootstrap.min.css\">")
 	print("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/eh13.css\">")
