@@ -113,9 +113,11 @@ def addUser(data, conf, conn):
 	#print("<h1>User created</h1>")
 	print("<div class=\"alert alert-success\">Creation of user " + name + " was successful.</div>")
 
-	msg  = "To: " + str(email) + "\r\n"
-	msg += "Subject: Willkommen\r\n\r\n" # TODO
-	msg += "Hallo " + str(name) + ",\n\n"
+	msg  = "To: " + str(email) + "\n"
+	msg += "Subject: Willkommen\n"
+	msg += "Content-type: text/plain; charset=utf-8\n"
+	msg += "Content-Transfer-Encoding: 8bit\n"
+	msg += "\nHallo " + str(name) + ",\n\n"
 	msg += "deine Registrierung war erfolgreich. Du kannst auf\n"
 	msg += "https://register.eh13.c3pb.de deinen Bezahlstatus einsehen\n"
 	msg += "und deine Frühstücks- und Shirtbestellung verwalten.\n\n"

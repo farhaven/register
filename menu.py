@@ -84,9 +84,11 @@ def admin(conf, conn):
 				cursor.execute("UPDATE users SET ticket = %s WHERE u_id = %s", (ticket, uid))
 				cursor.execute("SELECT email FROM users WHERE u_id = %s", (uid, ))
 				rcpt = cursor.fetchone()[0]
-				msg  = "To: " + str(rcpt) + "\r\n"
-				msg += "Subject: Dein Easterhegg 2013 Ticket\r\n\r\n"
-				msg += "Hallo " + str(form.getfirst("user", "")) + "!\n\n"
+				msg  = "To: " + str(rcpt) + "\n"
+				msg += "Subject: Dein Easterhegg 2013 Ticket\n"
+				msg += "Content-type: text/plain; charset=utf-8\n"
+				msg += "Content-Transfer-Encoding: 8bit\n"
+				msg += "\nHallo " + str(form.getfirst("user", "")) + "!\n\n"
 				msg += "Dein Ticket ist\n\n\t" + ticket + "\n\n"
 				msg += "Bitte druck diese Mail aus und bring den Ausdruck zum Easterhegg mit,\n"
 				msg += "oder speicher diese Nachricht auf dem Mobilkommunikationsgerät deiner\n"
