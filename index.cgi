@@ -29,13 +29,6 @@ class Config(object):
 			return self.dict[n]
 		return None
 
-def redirect_https():
-	if "HTTPS" not in os.environ:
-		print("Status: 302 See Other")
-		print("Location: https://" + os.environ["HTTP_HOST"] + os.environ["REQUEST_URI"])
-		print()
-		sys.exit(0)
-
 def redirect_post(cookies=None,update=None):
 	print("Status: 302 See Other")
 	if cookies is not None:
@@ -49,7 +42,6 @@ def redirect_post(cookies=None,update=None):
 
 if __name__ == "__main__":
 	conf = Config()
-	redirect_https()
 	conn = db.init(conf)
 
 	if "REQUEST_URI" in os.environ:
