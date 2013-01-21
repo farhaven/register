@@ -107,7 +107,7 @@ def admin(conf, conn):
 		finally:
 			conn.commit()
 
-	cursor.execute("SELECT count(*), sum(paid), sum(there) FROM users")
+	cursor.execute("SELECT count(*), COALESCE(sum(paid), 0), COALESCE(sum(there), 0) FROM users")
 	print("<h1>%d Benutzer (%d haben bezahlt, %d sind da)</h1>" % cursor.fetchone())
 	print("<div><table>")
 	print(html.tb_row(["Name", "eMail", "L&ouml;schen", "Hat bezahlt", "Ist da", "Shirts", "Ticket"], head=True))
