@@ -174,7 +174,6 @@ def admin(conf, conn):
 	print("</div>")
 
 def main(login, conf, conn):
-	#print("<h1>EH13 Registration</h1>")
 	# new user
 	if not login.valid():
 		print("<div class=\"row\">")
