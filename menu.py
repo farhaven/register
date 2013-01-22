@@ -249,6 +249,7 @@ def main(login, conf, conn):
 	print(shirt_order_row("L"))
 	print(shirt_order_row("XL"))
 	print(shirt_order_row("XXL"))
+	print(shirt_order_row("XXXL"))
 	print("</tbody></table>")
 	print("<form method=\"POST\">")
 	print(html.f_hidden("order", "clear_all"))
