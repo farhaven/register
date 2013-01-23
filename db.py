@@ -43,7 +43,8 @@ def init(conf):
 	create_table(conf, conn, "shirts", [
 			"s_id INT PRIMARY KEY AUTO_INCREMENT",
 			"u_id INT",
-			"size TEXT" ],
+			"size TEXT",
+			"girly BOOLEAN" ],
 			[ "FOREIGN KEY (u_id) REFERENCES users(u_id)" ]
 		)
 

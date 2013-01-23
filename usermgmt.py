@@ -30,12 +30,14 @@ class Login(object):
 				"has_paid": bool(result[5]),
 				"is_there": bool(result[6]),
 				"ticket": str(result[7]),
-				"shirts": [],
+				"shirts": {},
 				"lunch": {}
 		}
-		cursor.execute("SELECT size FROM shirts WHERE u_id = %s", (result[0], ))
+		cursor.execute("SELECT size, girly FROM shirts WHERE u_id = %s", (result[0], ))
 		for x in cursor.fetchall():
-			rv["shirts"].append(x[0])
+			if x[0] not in rv["shirts"]:
+				rv["shirts"][x[0]] = []
+			rv["shirts"][x[0]].append(x[1] == True)
 		if cursor.execute("SELECT buns, baloney, cheese, jam, cornflakes FROM lunch WHERE u_id = %s", (result[0], )) != 1L:
 			rv["lunch"]["buns"] = ""
 			rv["lunch"]["baloney"] = False

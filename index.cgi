@@ -95,10 +95,12 @@ if __name__ == "__main__":
 			u_id = cursor.fetchone()[0]
 			order = form.getfirst("order")
 			(op, size) = order.split("_", 2)
+			girlyshirt = size[0] == "G"
+			size = size[1:]
 			if op == "sub":
-				cursor.execute("DELETE FROM shirts WHERE (u_id = %s AND size = %s) LIMIT 1", (int(u_id), size))
+				cursor.execute("DELETE FROM shirts WHERE (u_id = %s AND size = %s AND girly = %s) LIMIT 1", (int(u_id), size, girlyshirt))
 			elif op == "add":
-				cursor.execute("INSERT INTO shirts (u_id, size) VALUES (%s, %s)", (int(u_id), size))
+				cursor.execute("INSERT INTO shirts (u_id, size, girly) VALUES (%s, %s, %s)", (int(u_id), size, girlyshirt))
 			elif op == "clear":
 				cursor.execute("DELETE FROM shirts WHERE u_id = %s", (int(u_id), ))
 			conn.commit()

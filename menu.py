@@ -123,9 +123,9 @@ def admin(conf, conn):
 			"ticket": str(x[5]),
 			"shirts": []
 		}
-		cursor.execute("SELECT size FROM shirts WHERE u_id = %s", (x[0], ))
+		cursor.execute("SELECT size, girly FROM shirts WHERE u_id = %s", (x[0], ))
 		for s in cursor.fetchall():
-			user["shirts"].append(s[0])
+			user["shirts"].append(("G" if s[1] == True else "R") + "_" + s[0])
 		tbl_del = "<a href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\">L&ouml;schen</a>"
 		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(user["name"]) + "&value="
 		if user["has_paid"]:
@@ -231,18 +231,30 @@ def main(login, conf, conn):
 	print("<div class=\"span6\"><div class=\"well well-small\">")
 
 	def shirt_order_row(size):
+		if size not in user["shirts"]:
+			user["shirts"][size] = []
+
 		items = [ size ]
-		if size in user["shirts"]:
-			items.append("<a href=\"?order=sub_" + size + "\">-</a>")
-		else:
+
+		if user["shirts"][size].count(False) == 0:
 			items.append("-")
-		items.append(user["shirts"].count(size))
-		items.append("<a href=\"?order=add_" + size + "\">+</a>")
+		else:
+			items.append("<a href=\"?order=sub_R" + size + "\">-</a>")
+		items.append(str(user["shirts"][size].count(False)))
+		items.append("<a href=\"?order=add_R" + size + "\">+</a>")
+
+		if user["shirts"][size].count(True) == 0:
+			items.append("-")
+		else:
+			items.append("<a href=\"?order=sub_G" + size + "\">-</a>")
+		items.append(str(user["shirts"][size].count(True)))
+		items.append("<a href=\"?order=add_G" + size + "\">+</a>")
+
 		return html.tb_row(items)
 
 	print("<h2>Shirts</h2>")
 	print("<table class=\"table\">")
-	print("<thead><tr><th>Gr&ouml;&szlig;e</th><th colspan=\"3\">Menge</th></tr></thead>")
+	print("<thead><tr><th>Gr&ouml;&szlig;e</th><th colspan=\"3\">Regular</th><th colspan=\"3\">Girlyshirts</th></tr></thead>")
 	print("<tbody>")
 	print(shirt_order_row("S"))
 	print(shirt_order_row("M"))
