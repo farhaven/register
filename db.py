@@ -37,6 +37,7 @@ def init(conf):
 			"pwhash TEXT",
 			"paid BOOLEAN",
 			"there BOOLEAN",
+			"ticket TEXT",
 			], [ "UNIQUE(name(128))" ]
 		)
 
