@@ -237,18 +237,18 @@ def main(login, conf, conn):
 		items = [ size ]
 
 		if user["shirts"][size].count(False) == 0:
-			items.append("-")
+			items.append("<a class=\"btn\"><i class=\"icon-minus-sign\"></i></a>")
 		else:
-			items.append("<a href=\"?order=sub_R" + size + "\">-</a>")
+			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_R" + size + "\"><i class=\"icon-minus-sign\"></i></a>")
 		items.append(str(user["shirts"][size].count(False)))
-		items.append("<a href=\"?order=add_R" + size + "\">+</a>")
+		items.append("<a class=\"btn btn-success\" href=\"?order=add_R" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
 
 		if user["shirts"][size].count(True) == 0:
-			items.append("-")
+			items.append("<a class=\"btn\"><i class=\"icon-minus-sign\"></i></a>")
 		else:
-			items.append("<a href=\"?order=sub_G" + size + "\">-</a>")
+			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_G" + size + "\"><i class=\"icon-minus-sign\"></i></a>")
 		items.append(str(user["shirts"][size].count(True)))
-		items.append("<a href=\"?order=add_G" + size + "\">+</a>")
+		items.append("<a class=\"btn btn-success\" href=\"?order=add_G" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
 
 		return html.tb_row(items)
 
