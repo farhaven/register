@@ -127,7 +127,7 @@ def admin(conf, conn):
 		for s in cursor.fetchall():
 			user["shirts"].append(("G" if s[1] == True else "R") + "_" + s[0])
 		tbl_user = "<span title=\"" + cgi.escape(user["email"]) + "\">" + cgi.escape(user["name"]) + "</span>"
-		tbl_del = "<a class=\"btn btn-warning\" href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\"><i class=\"icon-remove\"></i></a>"
+		tbl_del = "<a class=\"btn btn-warning\" href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\" onclick=\"return confirm('Are you serious, bro?');\"><i class=\"icon-trash\"></i></a>"
 		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(user["name"]) + "&value="
 		if user["has_paid"]:
 			tbl_paid += "no\" class=\"btn btn-success\"><i class=\"icon-ok\"></i></a>"
