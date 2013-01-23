@@ -141,7 +141,7 @@ def admin(conf, conn):
 	print("</table></div>")
 
 	print("<h1>Frystyck</h1>")
-	print("<div><table>")
+	print("<div><table class=\"table table-bordered\">")
 	print(html.tb_row(["Br&ouml;tchen", "Wurscht", "K&auml;se", "Marmelade", "Cornflakes"], head=True))
 	cursor.execute("SELECT sum(buns), sum(baloney), sum(cheese), sum(jam), sum(cornflakes) FROM lunch")
 	print(html.tb_row(cursor.fetchone()))
