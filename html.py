@@ -22,10 +22,10 @@ def f_hidden(name, value):
 	return "<input type=\"hidden\" name=\"" + cgi.escape(name) + "\" value=\"" + cgi.escape(value) + "\"/>"
 
 def f_submit(value=None):
-	s = "<input type=\"submit\""
+	s = "<button type=\"submit\" class=\"btn\">"
 	if value is not None:
-		s += " value=\"" + value + "\""
-	return s + "/>"
+		s += value
+	return s + "</button>"
 
 def tb_row(fields, head=False):
 	word = "td"
