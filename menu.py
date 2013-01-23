@@ -110,7 +110,7 @@ def admin(conf, conn):
 	cursor.execute("SELECT count(*), COALESCE(sum(paid), 0), COALESCE(sum(there), 0) FROM users")
 	print("<h1>%d Benutzer (%d haben bezahlt, %d sind da)</h1>" % cursor.fetchone())
 	print("<div><table class=\"table table-bordered table-hover\">")
-	print(html.tb_row(["Name", "eMail", "L&ouml;schen", "Hat bezahlt", "Ist da", "Shirts", "Ticket"], head=True))
+	print(html.tb_row(["Name", "L&ouml;schen", "Hat bezahlt", "Ist da", "Shirts", "Ticket"], head=True))
 	cursor.execute("SELECT u_id, name, email, paid, there, ticket FROM users");
 	def key(x):
 		return str(x[1]).lower()
@@ -126,6 +126,7 @@ def admin(conf, conn):
 		cursor.execute("SELECT size, girly FROM shirts WHERE u_id = %s", (x[0], ))
 		for s in cursor.fetchall():
 			user["shirts"].append(("G" if s[1] == True else "R") + "_" + s[0])
+		tbl_user = "<span title=\"" + cgi.escape(user["email"]) + "\">" + cgi.escape(user["name"]) + "</span>"
 		tbl_del = "<a class=\"btn btn-warning\" href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\"><i class=\"icon-remove\"></i></a>"
 		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(user["name"]) + "&value="
 		if user["has_paid"]:
@@ -137,7 +138,7 @@ def admin(conf, conn):
 			tbl_there += "no\" class=\"btn btn-success\"><i class=\"icon-ok\"></i></a>"
 		else:
 			tbl_there += "yes\" class=\"btn btn-danger\"><i class=\"icon-remove\"></i></a>"
-		print(html.tb_row([user["name"], user["email"], tbl_del, tbl_paid, tbl_there, user["shirts"], user["ticket"]]))
+		print(html.tb_row([tbl_user, tbl_del, tbl_paid, tbl_there, user["shirts"], user["ticket"]]))
 	print("</table></div>")
 
 	print("<h1>Frystyck</h1>")
