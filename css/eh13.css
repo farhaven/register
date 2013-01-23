@@ -1,14 +1,23 @@
 body {
-	/* 60px to make the container go all the way to the bottom of the topbar */
+	/* 70px to make the container go all the way to the bottom of the topbar */
 	padding-top: 70px;
 }
 
+/*
 table {
 	margin: 0.2em;
 	border-collapse: collapse;
 }
+	*/
 
+/*
 table, td, th {
 	padding: 0.1em 0.5em 0.1em 0.5em;
 	border: 1px solid black;
+}
+*/
+
+.table td {
+	/* text-align: center; */
+	vertical-align: center;
 }

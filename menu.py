@@ -109,7 +109,7 @@ def admin(conf, conn):
 
 	cursor.execute("SELECT count(*), COALESCE(sum(paid), 0), COALESCE(sum(there), 0) FROM users")
 	print("<h1>%d Benutzer (%d haben bezahlt, %d sind da)</h1>" % cursor.fetchone())
-	print("<div><table>")
+	print("<div><table class=\"table table-bordered table-hover\">")
 	print(html.tb_row(["Name", "eMail", "L&ouml;schen", "Hat bezahlt", "Ist da", "Shirts", "Ticket"], head=True))
 	cursor.execute("SELECT u_id, name, email, paid, there, ticket FROM users");
 	def key(x):
@@ -126,17 +126,17 @@ def admin(conf, conn):
 		cursor.execute("SELECT size, girly FROM shirts WHERE u_id = %s", (x[0], ))
 		for s in cursor.fetchall():
 			user["shirts"].append(("G" if s[1] == True else "R") + "_" + s[0])
-		tbl_del = "<a href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\">L&ouml;schen</a>"
+		tbl_del = "<a class=\"btn btn-warning\" href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\"><i class=\"icon-remove\"></i></a>"
 		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(user["name"]) + "&value="
 		if user["has_paid"]:
-			tbl_paid += "no\">ja</a>"
+			tbl_paid += "no\" class=\"btn btn-success\"><i class=\"icon-ok\"></i></a>"
 		else:
-			tbl_paid += "yes\">nein</a>"
+			tbl_paid += "yes\" class=\"btn btn-danger\"><i class=\"icon-remove\"></i></a>"
 		tbl_there = "<a href=\"?action=setthere&user=" + urllib.quote(user["name"]) + "&value="
 		if user["is_there"]:
-			tbl_there += "no\">ja</a>"
+			tbl_there += "no\" class=\"btn btn-success\"><i class=\"icon-ok\"></i></a>"
 		else:
-			tbl_there += "yes\">nein</a>"
+			tbl_there += "yes\" class=\"btn btn-danger\"><i class=\"icon-remove\"></i></a>"
 		print(html.tb_row([user["name"], user["email"], tbl_del, tbl_paid, tbl_there, user["shirts"], user["ticket"]]))
 	print("</table></div>")
 
@@ -211,7 +211,7 @@ def main(login, conf, conn):
 	user = login.as_dict()
 
 	print("<div class=\"row\"><div class=\"span12\">")
-	print("<table class=\"table userstatus\">")
+	print("<table class=\"table table-bordered userstatus\">")
 	print("<thead><tr><th colspan=\"2\">Status f&uuml;r " + cgi.escape(user["name"]) + " &lt;" + cgi.escape(user["email"]) + "&gt;</th></tr></thead>");
 	print("<tbody>");
 	print("<tr class=\"" + ("success" if user["has_paid"] else "error") + "\"><td>Bezahlt</td><td>" + html.bool_icon(user["has_paid"]))
