@@ -148,6 +148,16 @@ def admin(conf, conn):
 	print(html.tb_row(cursor.fetchone()))
 	print("</table></div>")
 
+	print("<h1>Shirts</h1>")
+	print("<div><table class=\"table table-bordered\">")
+	print(html.tb_row(["Gr&ouml;&szlig;e", "Anzahl gesamt", "Anzahl Girlies"], head=True))
+	for s in [ "S", "M", "L", "XL", "XXL", "XXXL", "4XL" ]:
+		row = [s]
+		cursor.execute("SELECT count(*), COALESCE(sum(girly), 0) FROM shirts WHERE size = %s", (s, ))
+		row.extend(cursor.fetchone())
+		print(html.tb_row(row))
+	print("</table></div>")
+
 	print("<h1>Admins</h1>")
 	print("<h2>Registrierte Admins</h2>")
 	print("<div><ul>")
