@@ -86,8 +86,8 @@ def addUser(data, conf, conn):
 	failures = ""
 	if name == "":
 		failures += "<li>No username specified!</li>"
-	if email == "":
-		failures += "<li>No email specified!</li>"
+	if email == "" or email.count("@") != 1:
+		failures += "<li>Invalid email specified!</li>"
 	if passwd == "":
 		failures += "<li>Password empty!</li>"
 	if passwd != passwd_again:
