@@ -13,6 +13,8 @@ import sys
 
 import traceback
 
+import usermgmt
+
 def header(login, active="home"):
 	s  = "<div class=\"navbar navbar-inverse navbar-fixed-top\">"
 	s +=   "<div class=\"navbar-inner\"><div class=\"container\">"
@@ -83,21 +85,7 @@ def admin(conf, conn):
 				ticket = str(uuid.uuid4())
 				cursor.execute("UPDATE users SET ticket = %s WHERE u_id = %s", (ticket, uid))
 				cursor.execute("SELECT email FROM users WHERE u_id = %s", (uid, ))
-				rcpt = cursor.fetchone()[0]
-				msg  = "To: " + str(rcpt) + "\n"
-				msg += "Subject: Dein Easterhegg 2013 Ticket\n"
-				msg += "Content-type: text/plain; charset=utf-8\n"
-				msg += "Content-Transfer-Encoding: 8bit\n"
-				msg += "\nHallo " + str(form.getfirst("user", "")) + "!\n\n"
-				msg += "Dein Ticket ist\n\n\t" + ticket + "\n\n"
-				msg += "Bitte druck diese Mail aus und bring den Ausdruck zum Easterhegg mit,\n"
-				msg += "oder speicher diese Nachricht auf dem Mobilkommunikationsgerät deiner\n"
-				msg += "Wahl, um sie bei der Ankunft vorzeigen zu können.\n\n"
-				msg += "\tDeine eh13-Orga"
-				s = smtplib.SMTP()
-				s.connect()
-				s.sendmail("register@eh13.c3pb.de", [ rcpt ], msg)
-				s.quit()
+				usermgmt.sendTicket(form.getfirst("user", ""), ticket, cursor.fetchone()[0])
 			elif not val:
 				cursor.execute("UPDATE users SET ticket = NULL WHERE u_id = %s", (uid, ))
 		except Exception as err:

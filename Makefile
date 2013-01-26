@@ -7,7 +7,8 @@ FILES=index.cgi \
 		settings.default.json \
 		css/*.css \
 		img/* \
-		js/*
+		js/* \
+		ticket-template.pdf
 
 all: upload
 

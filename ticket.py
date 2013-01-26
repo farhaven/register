@@ -10,8 +10,8 @@ from StringIO import StringIO
 
 def build_ticket(ticket, owner = None, \
                  background = "ticket-template.pdf", \
-                 ticket_x = 2, ticket_y = 2, ticket_size = 5, \
-                 owner_x = 10, owner_y = 3):
+                 ticket_x = 2.58, ticket_y = 5.93, ticket_size = 3.14, \
+                 owner_x = 7.2, owner_y = 7):
 
 	tempImg = tempfile.mkstemp()
 	tempName = tempImg[1]
@@ -25,6 +25,8 @@ def build_ticket(ticket, owner = None, \
 	if owner != None:
 		overlay.setFont('Helvetica', 20)
 		overlay.drawString(owner_x * cm, owner_y * cm, owner)
+	overlay.setFont('Courier', 10)
+	overlay.drawString(owner_x * cm, (owner_y + 1) * cm, ticket)
 
 	overlay.drawImage(tempName, ticket_x * cm, ticket_y * cm, ticket_size * cm, ticket_size * cm)
 	overlay.save()

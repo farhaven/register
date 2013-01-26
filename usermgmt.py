@@ -1,11 +1,16 @@
 # coding=utf-8
 
+import os
 import cgi
 import random
 import hashlib
 import smtplib
+import email.mime.text
+import email.mime.multipart
+import email.mime.application
 
 import menu
+import ticket
 
 class Login(object):
 	def __init__(self, cookies, db, form):
@@ -77,6 +82,38 @@ class Login(object):
 		m.update(user["salt"])
 		return user["pwhash"] == m.hexdigest()
 
+def sendTicket(name, ticket_no, address):
+	msg = email.mime.multipart.MIMEMultipart()
+	msg["From"] = "register@eh13.c3pb.de"
+	msg["Subject"] = "Dein Easterhegg 2013 Ticket"
+	msg["To"] = address
+
+	txt  = "Hallo " + str(name) + "!\n\n"
+	txt += "Dein Ticket ist\n\n\t" + str(ticket_no) + "\n\n"
+	txt += "Bitte druck dein Ticket im Anhang dieser Mail aus und bring den\n"
+	txt += "Ausdruck zum Easterhegg mit, oder speicher diese Nachricht auf dem\n"
+	txt += "Mobilkommunikationsgerät deiner Wahl, um sie bei der Ankunft\n"
+	txt += "vorzeigen zu können.\n\n"
+	txt += "\tDeine eh13-Orga"
+	txt = email.mime.text.MIMEText(txt)
+	txt.set_charset("utf-8")
+
+	fname = ticket.build_ticket(ticket_no, name)
+	fh = open(fname[1], "r")
+	pdf = email.mime.application.MIMEApplication(fh.read())
+	fh.close()
+	os.unlink(fname[1])
+
+	msg.attach(txt)
+	msg.attach(pdf)
+
+	s = smtplib.SMTP()
+	s.connect()
+	s.sendmail("register@eh13.c3pb.de", [ address ], msg.as_string())
+	s.quit()
+
+	return msg.as_string()
+
 def addUser(data, conf, conn):
 	name = cgi.escape(data.getfirst("username", ""))
 	email = cgi.escape(data.getfirst("email", ""))
@@ -139,3 +176,7 @@ def addUser(data, conf, conn):
 	except Exception as err:
 		return str(err)
 	return None
+
+if __name__ == "__main__":
+	x = sendTicket("gbe", "foobar", "gbe@unobtanium.de")
+	print(str(x))
