@@ -103,6 +103,8 @@ def sendTicket(name, ticket_no, address):
 	pdf = email.mime.application.MIMEApplication(fh.read())
 	fh.close()
 	os.unlink(fname[1])
+	pdf.add_header("Content-Disposition", "attachment", filename="ticket-" + ticket_no + ".pdf")
+	pdf.replace_header("Content-Type", "application/pdf")
 
 	msg.attach(txt)
 	msg.attach(pdf)
