@@ -11,7 +11,8 @@ from StringIO import StringIO
 def build_ticket(ticket, owner = None, \
                  background = "ticket-template.pdf", \
                  ticket_x = 2.58, ticket_y = 5.93, ticket_size = 3.14, \
-                 owner_x = 7.2, owner_y = 7):
+                 ticket_print_as_string = True, ticket_sx = 7.2, ticket_sy = 7.5,
+					  owner_x = 7.2, owner_y = 7):
 
 	tempImg = tempfile.mkstemp()
 	tempName = tempImg[1]
@@ -25,8 +26,10 @@ def build_ticket(ticket, owner = None, \
 	if owner != None:
 		overlay.setFont('Helvetica', 20)
 		overlay.drawString(owner_x * cm, owner_y * cm, owner)
-	overlay.setFont('Courier', 10)
-	overlay.drawString(owner_x * cm, (owner_y + 1) * cm, ticket)
+
+	if ticket_print_as_string:
+		overlay.setFont('Courier', 8)
+		overlay.drawString(ticket_sx * cm, ticket_sy * cm, ticket)
 
 	overlay.drawImage(tempName, ticket_x * cm, ticket_y * cm, ticket_size * cm, ticket_size * cm)
 	overlay.save()
@@ -49,6 +52,6 @@ if __name__ == "__main__":
 	ticket_owner = "Bernd"
 	output_name = "output.pdf"
 
-	result = build_ticket(ticket_no, ticket_owner, ticket_x = 2.58, ticket_y = 5.93, ticket_size = 3.14, owner_x = 7.2, owner_y = 7)
+	result = build_ticket(ticket_no, ticket_owner, ticket_x = 2.58, ticket_y = 5.93, ticket_size = 3.14, owner_x = 7.2, owner_y = 7, ticket_sx = 7.2, ticket_sy = 7.5)
 	shutil.move(result[1], output_name)
 
