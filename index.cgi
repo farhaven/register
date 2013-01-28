@@ -147,6 +147,8 @@ if __name__ == "__main__":
 		print("</div>")
 	elif is_admin:
 		menu.admin(conf, conn)
+	elif form.getfirst("action") == "changepass":
+		login.changePass(form, conn)
 	elif form.getfirst("action", "logout") == "logout":
 		menu.main(login, conf, conn)
 	elif form.getfirst("action") == "login":

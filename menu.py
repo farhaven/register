@@ -36,6 +36,7 @@ def header(login, active="home"):
 			#s += "<li><a href=\"#about\">About</a></li>"
 			#s += "<li><a href=\"#contact\">Contact</a></li>"
 
+			s += "<li class=\"\"><a href=\"?action=changepass\">Change password</a></li>"
 			s += "<li class=\""
 			s += "active" if active == "logout" else ""
 			s += "\"><a href=\"/?action=logout\">Logout</a></li>"

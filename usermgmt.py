@@ -11,6 +11,7 @@ import email.mime.application
 
 import menu
 import ticket
+import html
 
 class Login(object):
 	def __init__(self, cookies, db, form):
@@ -81,6 +82,47 @@ class Login(object):
 		m.update(self.cookies["PASSWORD"].value)
 		m.update(user["salt"])
 		return user["pwhash"] == m.hexdigest()
+
+	def hash_pass(self, password):
+		c = self.db.cursor()
+		c.execute("SELECT u_id FROM users WHERE name = %s", (self.name(), ))
+		uid = c.fetchone()[0]
+
+		salt = str(random.random())
+		m = hashlib.sha1()
+		m.update(password)
+		m.update(salt)
+
+		if uid is not None:
+			c.execute("UPDATE users SET salt = %s, pwhash = %s WHERE u_id = %s",
+				(salt, m.hexdigest(), uid))
+			self.db.commit()
+		return (salt, m.hexdigest())
+
+	def changePass(self, form, conn):
+		if not self.valid():
+			print("<div class=\"alert alert-warning\">You need to be logged in!</div>")
+			return
+		error = False
+		if form.getfirst("password") != form.getfirst("password_again"):
+			print("<div class=\"alert alert-error\">Passwords don't match!</div>")
+			error = True
+		if form.getfirst("password") is None or error:
+			print("<div class=\"row\">")
+			print("<div class=\"span6\"><div class=\"well well-small\"><h2>Change Password</h2>")
+			print(html.form_start(box=False))
+			print(html.f_hidden("action", "changepass"))
+			print(html.form_password("pass", "New Password", "password", "New Password"))
+			print(html.form_password("pass2", "New Password (again)", "password_again", "New Password (again)"))
+			print(html.form_submit())
+			print(html.form_end(box=False))
+			print("</div></div></div>")
+			return
+		c = conn.cursor()
+		c.execute("SELECT u_id FROM users WHERE name = %s", self.name())
+		uid = c.fetchone()[0]
+		print("<div class=\"alert alert-info\">Would update pass for user #" + str(uid) + " now</div>")
+		self.hash_pass(form.getfirst("password"))
 
 def sendTicket(name, ticket_no, address):
 	msg = email.mime.multipart.MIMEMultipart()
