@@ -53,13 +53,11 @@ if __name__ == "__main__":
 	elif form.getfirst("action") == "update_lunch":
 		cursor = conn.cursor()
 		try:
-			cursor.execute("SELECT u_id FROM users WHERE name = %s", (login.name(), ))
-			u_id = cursor.fetchone()[0]
 			items = form.getlist("food")
-			if cursor.execute("SELECT * FROM lunch WHERE u_id = %s", (u_id, )) == 0L:
+			if cursor.execute("SELECT * FROM lunch WHERE u_id = %s", (login["u_id"], )) == 0L:
 				cursor.execute("INSERT INTO lunch (u_id, buns, baloney, cheese, jam, cornflakes) " +
 									"VALUES (%s, %s, %s, %s, %s, %s)", (
-						u_id,
+						login["u_id"],
 						form.getfirst("buns", ""),
 						"baloney" in items,
 						"cheese" in items,
@@ -75,7 +73,7 @@ if __name__ == "__main__":
 						"cheese" in items,
 						"jam" in items,
 						"cornflakes" in items,
-						u_id
+						login["u_id"]
 					))
 			conn.commit()
 		except Exception as err:
@@ -91,18 +89,16 @@ if __name__ == "__main__":
 	elif form.getfirst("order") is not None:
 		cursor = conn.cursor()
 		try:
-			cursor.execute("SELECT u_id FROM users WHERE name = %s", (login.name()))
-			u_id = cursor.fetchone()[0]
 			order = form.getfirst("order")
 			(op, size) = order.split("_", 2)
 			girlyshirt = size[0] == "G"
 			size = size[1:]
 			if op == "sub":
-				cursor.execute("DELETE FROM shirts WHERE (u_id = %s AND size = %s AND girly = %s) LIMIT 1", (int(u_id), size, girlyshirt))
+				cursor.execute("DELETE FROM shirts WHERE (u_id = %s AND size = %s AND girly = %s) LIMIT 1", (login["u_id"], size, girlyshirt))
 			elif op == "add":
-				cursor.execute("INSERT INTO shirts (u_id, size, girly) VALUES (%s, %s, %s)", (int(u_id), size, girlyshirt))
+				cursor.execute("INSERT INTO shirts (u_id, size, girly) VALUES (%s, %s, %s)", (login["u_id"], size, girlyshirt))
 			elif op == "clear":
-				cursor.execute("DELETE FROM shirts WHERE u_id = %s", (int(u_id), ))
+				cursor.execute("DELETE FROM shirts WHERE u_id = %s", (login["u_id"], ))
 			conn.commit()
 		except:
 			pass

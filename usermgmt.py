@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import os
+import Cookie
 import cgi
 import random
 import hashlib
@@ -14,14 +15,18 @@ import ticket
 import html
 
 class Login(object):
-	def __init__(self, cookies, db, form):
-		self.cookies = cookies
+	def __init__(self, cookies=None, db=None, form=None, name=None):
 		self.db = db
-		try:
-			self.cookies["USERNAME"] = form["username"].value
-			self.cookies["PASSWORD"] = form["password"].value
-		except:
-			pass
+		if name is None:
+			self.cookies = cookies
+			try:
+				self.cookies["USERNAME"] = form["username"].value
+				self.cookies["PASSWORD"] = form["password"].value
+			except:
+				pass
+		else:
+			self.cookies = Cookie.SimpleCookie()
+			self.cookies["USERNAME"] = name
 
 	def __getitem__(self, item):
 		c = self.db.cursor()
@@ -76,6 +81,7 @@ class Login(object):
 		m.update(salt)
 
 		if self["u_id"] is not None:
+			c = self.db.cursor()
 			c.execute("UPDATE users SET salt = %s, pwhash = %s WHERE u_id = %s",
 				(salt, m.hexdigest(), self["u_id"]))
 			self.db.commit()

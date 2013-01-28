@@ -7,9 +7,11 @@ import os.path
 import cgi
 import html
 import urllib
+import email.mime.text
 import smtplib
 import uuid
 import sys
+import random
 
 import traceback
 
@@ -75,6 +77,26 @@ def admin(conf, conn):
 		val = True if form.getfirst("value") == "yes" else False
 		rv = cursor.execute("UPDATE users SET there = %s WHERE name = %s", (val, form.getfirst("user", "")))
 		conn.commit()
+	elif form.getfirst("action") == "resetpw":
+		user = usermgmt.Login(db=conn, name=form.getfirst("user", ""))
+		print("<div class=\"alert alert-info\">PW reset for " + str(user.name()) + " requested</div>")
+		passwd = str(random.random())
+		user.hashPass(passwd)
+		txt  = "Hallo " + str(user.name()) + "!\n\n"
+		txt += "Dein Passwort für https://register.eh13.c3pb.de wurde auf\n"
+		txt += "\t" + passwd + "\n"
+		txt += "gesetzt. Bitte ändere dein Passwort so schnell wie möglich.\n\n"
+		txt += "\tDeine eh13-Orga"
+		txt  = email.mime.text.MIMEText(txt)
+		txt.set_charset("utf-8")
+		txt["From"] = "register@eh13.c3pb.de"
+		txt["Subject"] = "Passwort-Reset"
+		txt["To"] = user["email"]
+
+		s = smtplib.SMTP()
+		s.connect()
+		s.sendmail("register@eh13.c3pb.de", [ user["email"] ], txt.as_string())
+		s.quit()
 	elif form.getfirst("action") == "setpaid":
 		try:
 			cursor.execute("SELECT u_id FROM users WHERE name = %s", (form.getfirst("user", ""), ))
@@ -99,7 +121,7 @@ def admin(conf, conn):
 	cursor.execute("SELECT count(*), COALESCE(sum(paid), 0), COALESCE(sum(there), 0) FROM users")
 	print("<h1>%d Benutzer (%d haben bezahlt, %d sind da)</h1>" % cursor.fetchone())
 	print("<div><table class=\"table table-bordered table-hover\">")
-	print(html.tb_row(["Name", "L&ouml;schen", "Hat bezahlt", "Ist da", "Shirts", "Ticket"], head=True))
+	print(html.tb_row(["Name<br/>(Klick f&uuml;r PW-Reset)", "L&ouml;schen", "Hat bezahlt", "Ist da", "Shirts", "Ticket"], head=True))
 	cursor.execute("SELECT u_id, name, email, paid, there, ticket FROM users");
 	def key(x):
 		return str(x[1]).lower()
@@ -115,7 +137,12 @@ def admin(conf, conn):
 		cursor.execute("SELECT size, girly FROM shirts WHERE u_id = %s", (x[0], ))
 		for s in cursor.fetchall():
 			user["shirts"].append(("G" if s[1] == True else "R") + "_" + s[0])
-		tbl_user = "<span title=\"" + cgi.escape(user["email"]) + "\">" + cgi.escape(user["name"]) + "</span>"
+		tbl_user  = "<span title=\"" + cgi.escape(user["email"]) + "\">"
+		tbl_user += "<a href=\"?action=resetpw&user=" + urllib.quote(user["name"]) + "\" onclick=\"return confirm('Sure?');\">"
+		tbl_user += cgi.escape(user["name"])
+		tbl_user += "</a>"
+		tbl_user += "</span>"
+
 		tbl_del = "<a class=\"btn btn-warning\" href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\" onclick=\"return confirm('Are you serious, bro?');\"><i class=\"icon-trash\"></i></a>"
 		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(user["name"]) + "&value="
 		if user["has_paid"]:
