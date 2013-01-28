@@ -69,19 +69,15 @@ class Login(object):
 		m.update(self["salt"])
 		return self["pwhash"] == m.hexdigest()
 
-	def hash_pass(self, password):
-		c = self.db.cursor()
-		c.execute("SELECT u_id FROM users WHERE name = %s", (self.name(), ))
-		uid = c.fetchone()[0]
-
+	def hashPass(self, password):
 		salt = str(random.random())
 		m = hashlib.sha1()
 		m.update(password)
 		m.update(salt)
 
-		if uid is not None:
+		if self["u_id"] is not None:
 			c.execute("UPDATE users SET salt = %s, pwhash = %s WHERE u_id = %s",
-				(salt, m.hexdigest(), uid))
+				(salt, m.hexdigest(), self["u_id"]))
 			self.db.commit()
 		return (salt, m.hexdigest())
 
@@ -107,8 +103,8 @@ class Login(object):
 		c = conn.cursor()
 		c.execute("SELECT u_id FROM users WHERE name = %s", self.name())
 		uid = c.fetchone()[0]
-		print("<div class=\"alert alert-info\">Would update pass for user #" + str(uid) + " now</div>")
-		self.hash_pass(form.getfirst("password"))
+		print("<div class=\"alert alert-info\">Password changed!</div>")
+		self.hashPass(form.getfirst("password"))
 
 def sendTicket(name, ticket_no, address):
 	msg = email.mime.multipart.MIMEMultipart()
@@ -168,12 +164,10 @@ def addUser(data, conf, conn):
 	if failures != "":
 		return "<ul>" + failures + "</ul>"
 
-	salt = str(random.random())
-	m = hashlib.sha1()
-	m.update(passwd)
-	m.update(salt)
+	login = Login(None, conn, None)
+	(salt, digest) = login.hashPass(passwd)
 	rv = cursor.execute("INSERT INTO users (name, email, salt, pwhash) VALUES (%s, %s, %s, %s)",
-				(name, email, salt, m.hexdigest()))
+				(name, email, salt, digest))
 	conn.commit()
 
 	msg  = "To: " + str(email) + "\n"
