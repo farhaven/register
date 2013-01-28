@@ -208,21 +208,19 @@ def main(login, conf, conn):
 		print("</div>")
 		return
 
-	user = login.as_dict()
-
 	print("<div class=\"row\"><div class=\"span12\">")
 	print("<table class=\"table table-bordered userstatus\">")
-	print("<thead><tr><th colspan=\"2\">Status f&uuml;r " + cgi.escape(user["name"]) + " &lt;" + cgi.escape(user["email"]) + "&gt;</th></tr></thead>");
+	print("<thead><tr><th colspan=\"2\">Status f&uuml;r " + cgi.escape(login["name"]) + " &lt;" + cgi.escape(login["email"]) + "&gt;</th></tr></thead>");
 	print("<tbody>");
-	print("<tr class=\"" + ("success" if user["has_paid"] else "error") + "\"><td>Bezahlt</td><td>" + html.bool_icon(user["has_paid"]))
-	if user["has_paid"]:
-		if user["ticket"] != None and user["ticket"] != "" and user["ticket"] != "None":
-			print("<span class=\"ticket\">Ticket: " + cgi.escape(user["ticket"]) + "</span>")
+	print("<tr class=\"" + ("success" if login["paid"] else "error") + "\"><td>Bezahlt</td><td>" + html.bool_icon(login["paid"]))
+	if login["paid"]:
+		if login["ticket"] != None and login["ticket"] != "" and login["ticket"] != "None":
+			print("<span class=\"ticket\">Ticket: " + cgi.escape(login["ticket"]) + "</span>")
 		print(" (<a href=\"#kontoinfo\" role=\"button\" data-toggle=\"modal\" title=\"Konto-Information erneut einblenden\">Konto-Info</a>)")
 	else:
 		print("&Uuml;berweise 42&euro; auf das Konto des <a href=\"#kontoinfo\" role=\"button\" data-toggle=\"modal\" title=\"Konto-Information einblenden\">C3PB e.V.</a>")
 	print("</td></tr>")
-	print("<tr class=\"" + ("success" if user["is_there"] else "error") + "\"><td>Anwesend</td><td>" + html.bool_icon(user["is_there"]) + "</td></tr>")
+	print("<tr class=\"" + ("success" if login["there"] else "error") + "\"><td>Anwesend</td><td>" + html.bool_icon(login["there"]) + "</td></tr>")
 	print("</tbody></table>")
 	print("</div></div>")
 
@@ -230,24 +228,25 @@ def main(login, conf, conn):
 
 	print("<div class=\"span6\"><div class=\"well well-small\">")
 
+	shirts = login["shirts"]
 	def shirt_order_row(size):
-		if size not in user["shirts"]:
-			user["shirts"][size] = []
+		if size not in shirts:
+			shirts[size] = []
 
 		items = [ size ]
 
-		if user["shirts"][size].count(False) == 0:
+		if shirts[size].count(False) == 0:
 			items.append("<a class=\"btn\"><i class=\"icon-minus-sign\"></i></a>")
 		else:
 			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_R" + size + "\"><i class=\"icon-minus-sign\"></i></a>")
-		items.append(str(user["shirts"][size].count(False)))
+		items.append(str(shirts[size].count(False)))
 		items.append("<a class=\"btn btn-success\" href=\"?order=add_R" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
 
-		if user["shirts"][size].count(True) == 0:
+		if shirts[size].count(True) == 0:
 			items.append("<a class=\"btn\"><i class=\"icon-minus-sign\"></i></a>")
 		else:
 			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_G" + size + "\"><i class=\"icon-minus-sign\"></i></a>")
-		items.append(str(user["shirts"][size].count(True)))
+		items.append(str(shirts[size].count(True)))
 		items.append("<a class=\"btn btn-success\" href=\"?order=add_G" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
 
 		return html.tb_row(items)
@@ -277,11 +276,11 @@ def main(login, conf, conn):
 	print("<table class=\"table\">")
 	print("<thead><tr><th>Material</th><th>Menge</th></tr></thead>")
 	print("<tbody>")
-	print(html.tb_row(["Br&ouml;tchen", html.f_input("replaceme", "buns", value=user["lunch"]["buns"], size=10)]))
-	print(html.tb_row(["Wurst", html.f_checkbox("food", "baloney", user["lunch"]["baloney"])]))
-	print(html.tb_row(["K&auml;se", html.f_checkbox("food", "cheese", user["lunch"]["cheese"])]))
-	print(html.tb_row(["Marmelade", html.f_checkbox("food", "jam", user["lunch"]["jam"])]))
-	print(html.tb_row(["Cornflakes", html.f_checkbox("food", "cornflakes", user["lunch"]["cornflakes"])]))
+	print(html.tb_row(["Br&ouml;tchen", html.f_input("replaceme", "buns", value=login["lunch"]["buns"], size=10)]))
+	print(html.tb_row(["Wurst", html.f_checkbox("food", "baloney", login["lunch"]["baloney"])]))
+	print(html.tb_row(["K&auml;se", html.f_checkbox("food", "cheese", login["lunch"]["cheese"])]))
+	print(html.tb_row(["Marmelade", html.f_checkbox("food", "jam", login["lunch"]["jam"])]))
+	print(html.tb_row(["Cornflakes", html.f_checkbox("food", "cornflakes", login["lunch"]["cornflakes"])]))
 	print("</tbody></table>")
 	print(html.f_submit("Aktualisieren"))
 	print("</form>")
@@ -300,7 +299,7 @@ def main(login, conf, conn):
 	print(      "<tr><td>Konto-Inhaber</td><td>C3PB e.V.</td></tr>")
 	print(      "<tr><td>Konto-Nummer</td><td>8744126200</td></tr>")
 	print(      "<tr><td>Bank</td><td>Volksbank Paderborn (BLZ 47260121)</td></tr>")
-	print(      "<tr><td>Verwendungszweck</td><td>EasterHegg 2013 Teilnehmer \"" + user["name"] + "\"</td></tr>")
+	print(      "<tr><td>Verwendungszweck</td><td>EasterHegg 2013 Teilnehmer \"" + login["name"] + "\"</td></tr>")
 	print(    "</tbody></table>")
 	print(  "</div>")
 	print(  "<div class=\"modal-footer\"><button class=\"btn btn-primary\" data-dismiss=\"modal\" aria-hidden=\"true\">OK</button></div>")

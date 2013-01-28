@@ -23,41 +23,28 @@ class Login(object):
 		except:
 			pass
 
-	def as_dict(self):
-		cursor = self.db.cursor()
-		if cursor.execute("SELECT * FROM users WHERE name = %s", (self.name(), )) != 1L:
-			return {}
-		result = cursor.fetchone()
-		rv = {
-				"name": result[1],
-				"email": result[2],
-				"salt": result[3],
-				"pwhash": result[4],
-				"has_paid": bool(result[5]),
-				"is_there": bool(result[6]),
-				"ticket": str(result[7]),
-				"shirts": {},
-				"lunch": {}
-		}
-		cursor.execute("SELECT size, girly FROM shirts WHERE u_id = %s", (result[0], ))
-		for x in cursor.fetchall():
-			if x[0] not in rv["shirts"]:
-				rv["shirts"][x[0]] = []
-			rv["shirts"][x[0]].append(x[1] == True)
-		if cursor.execute("SELECT buns, baloney, cheese, jam, cornflakes FROM lunch WHERE u_id = %s", (result[0], )) != 1L:
-			rv["lunch"]["buns"] = ""
-			rv["lunch"]["baloney"] = False
-			rv["lunch"]["cheese"] = False
-			rv["lunch"]["jam"] = False
-			rv["lunch"]["cornflakes"] = False
-		else:
-			l = cursor.fetchone()
-			rv["lunch"]["buns"] = l[0]
-			rv["lunch"]["baloney"] = l[1]
-			rv["lunch"]["cheese"] = l[2]
-			rv["lunch"]["jam"] = l[3]
-			rv["lunch"]["cornflakes"] = l[4]
-		return rv
+	def __getitem__(self, item):
+		c = self.db.cursor()
+		if item in ["u_id", "name", "email", "salt", "pwhash", "paid", "there", "ticket"]:
+			if self.name() is None:
+				return None
+			if c.execute("SELECT " + item + " FROM users WHERE name = %s", (self.name(),)) == 1L:
+				return c.fetchone()[0]
+			return None
+		if item == "shirts":
+			c.execute("SELECT size, girly FROM shirts WHERE u_id = %s", (self["u_id"], ))
+			rv = {}
+			for x in c.fetchall():
+				if x[0] not in rv:
+					rv[x[0]] = []
+				rv[x[0]].append(x[1] == True)
+			return rv
+		if item == "lunch":
+			l = (0, 0, "", False, False, False, False)
+			if c.execute("SELECT * FROM lunch WHERE u_id = %s", (self["u_id"], )) != 0L:
+				l = c.fetchone()
+			return { "buns": l[2], "baloney": l[3], "cheese": l[4], "jam": l[5], "cornflakes": l[6] }
+		raise KeyError("unknown key: %s" % str(item))
 
 	def name(self):
 		try:
@@ -75,13 +62,12 @@ class Login(object):
 		return self.valid()
 
 	def valid(self):
-		user = self.as_dict()
-		if "pwhash" not in user:
+		if self["pwhash"] is None:
 			return False
 		m = hashlib.sha1()
 		m.update(self.cookies["PASSWORD"].value)
-		m.update(user["salt"])
-		return user["pwhash"] == m.hexdigest()
+		m.update(self["salt"])
+		return self["pwhash"] == m.hexdigest()
 
 	def hash_pass(self, password):
 		c = self.db.cursor()
