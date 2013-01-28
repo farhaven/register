@@ -74,7 +74,7 @@ class Login(object):
 		m.update(self["salt"])
 		return self["pwhash"] == m.hexdigest()
 
-	def hashPass(self, password):
+	def setPass(self, password):
 		salt = str(random.random())
 		m = hashlib.sha1()
 		m.update(password)
@@ -110,7 +110,7 @@ class Login(object):
 		c.execute("SELECT u_id FROM users WHERE name = %s", self.name())
 		uid = c.fetchone()[0]
 		print("<div class=\"alert alert-info\">Password changed!</div>")
-		self.hashPass(form.getfirst("password"))
+		self.setPass(form.getfirst("password"))
 
 def sendTicket(name, ticket_no, address):
 	msg = email.mime.multipart.MIMEMultipart()
@@ -171,7 +171,7 @@ def addUser(data, conf, conn):
 		return "<ul>" + failures + "</ul>"
 
 	login = Login(None, conn, None)
-	(salt, digest) = login.hashPass(passwd)
+	(salt, digest) = login.setPass(passwd)
 	rv = cursor.execute("INSERT INTO users (name, email, salt, pwhash) VALUES (%s, %s, %s, %s)",
 				(name, email, salt, digest))
 	conn.commit()

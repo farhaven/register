@@ -81,10 +81,10 @@ def admin(conf, conn):
 		user = usermgmt.Login(db=conn, name=form.getfirst("user", ""))
 		print("<div class=\"alert alert-info\">PW reset for " + str(user.name()) + " requested</div>")
 		passwd = str(random.random())
-		user.hashPass(passwd)
+		user.setPass(passwd)
 		txt  = "Hallo " + str(user.name()) + "!\n\n"
-		txt += "Dein Passwort für https://register.eh13.c3pb.de wurde auf\n"
-		txt += "\t" + passwd + "\n"
+		txt += "Dein Passwort für https://register.eh13.c3pb.de wurde auf\n\n"
+		txt += "\t" + passwd + "\n\n"
 		txt += "gesetzt. Bitte ändere dein Passwort so schnell wie möglich.\n\n"
 		txt += "\tDeine eh13-Orga"
 		txt  = email.mime.text.MIMEText(txt)
@@ -92,7 +92,6 @@ def admin(conf, conn):
 		txt["From"] = "register@eh13.c3pb.de"
 		txt["Subject"] = "Passwort-Reset"
 		txt["To"] = user["email"]
-
 		s = smtplib.SMTP()
 		s.connect()
 		s.sendmail("register@eh13.c3pb.de", [ user["email"] ], txt.as_string())
