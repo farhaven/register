@@ -122,9 +122,7 @@ def admin(conf, conn):
 	print("<div><table class=\"table table-bordered table-hover\">")
 	print(html.tb_row(["Name<br/>(Klick f&uuml;r PW-Reset)", "L&ouml;schen", "Hat bezahlt", "Ist da", "Shirts", "Ticket"], head=True))
 	cursor.execute("SELECT u_id, name, email, paid, there, ticket FROM users");
-	def key(x):
-		return str(x[1]).lower()
-	for x in sorted(cursor.fetchall(), key=key):
+	for x in sorted(cursor.fetchall(), key=lambda x: str(x[1]).lower()):
 		user = {
 			"name": x[1],
 			"email": x[2],
@@ -171,6 +169,14 @@ def admin(conf, conn):
 		cursor.execute("SELECT count(*), COALESCE(sum(girly), 0) FROM shirts WHERE size = %s", (s, ))
 		row.extend(cursor.fetchone())
 		print(html.tb_row(row))
+	print("</table></div>")
+
+	print("<h1>Bemerkungen an die Orga</h1>")
+	print("<div><table class=\"table table-bordered\">")
+	print(html.tb_row(["Benutzer", "Bemerkung"], head=True))
+	cursor.execute("SELECT name, note FROM users WHERE note IS NOT NULL AND note <> \"\"")
+	for x in sorted(map(lambda x: (x[0], x[1].replace("\n", "<br/>")), cursor.fetchall()), key=lambda x: str(x[0]).lower()):
+		print(html.tb_row(x))
 	print("</table></div>")
 
 	print("<h1>Admins</h1>")
@@ -312,6 +318,15 @@ def main(login, conf, conn):
 	print("</form>")
 	print("</div></div>")
 
+	print("</div>")
+
+	print("<div class=\"well well-small\">")
+	print("<h2>Bemerkungen</h2>")
+	print(html.form_start(box=False))
+	print(html.f_hidden("action", "update_note"))
+	print(html.form_textarea("note", login["note"], placeholder="Bin allergisch auf Sauerstoff, Kohlenstoff und Stickstoff.\nHab ne Sonnenlichtunverträglichkeit."))
+	print(html.f_submit("Speichern"))
+	print(html.form_end(box=False))
 	print("</div>")
 
 	print("<div id=\"kontoinfo\" class=\"modal hide fade\" role=\"dialog\" aria-hidden=\"True\" aria-labelledby=\"kontoinfoDlgCaption\">")

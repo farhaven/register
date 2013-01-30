@@ -50,6 +50,12 @@ if __name__ == "__main__":
 	elif form.getfirst("action") == "login":
 		if login.validate(form):
 			redirect.post(str(login.cookies))
+	elif form.getfirst("action") == "update_note":
+		note = cgi.escape(form.getfirst("note", ""))
+		c = conn.cursor()
+		c.execute("UPDATE users SET note = %s WHERE u_id = %s", (note, login["u_id"]))
+		conn.commit()
+		redirect.post(update="note")
 	elif form.getfirst("action") == "update_lunch":
 		cursor = conn.cursor()
 		try:
@@ -132,6 +138,8 @@ if __name__ == "__main__":
 		update_message = "Your lunch order has been updated."
 	elif update == "newuser":
 		update_message = "User account created successfully :-)"
+	elif update == "note":
+		update_message = "Your note has been updated."
 
 	if update_message != "":
 		print("<div id=\"update-alert\" class=\"alert alert-info\">" + update_message + "</div>")

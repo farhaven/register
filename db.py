@@ -38,6 +38,7 @@ def init(conf):
 			"paid BOOLEAN",
 			"there BOOLEAN",
 			"ticket TEXT",
+			"note TEXT",
 			], [ "UNIQUE(name(128))" ]
 		)
 

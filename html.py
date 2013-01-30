@@ -72,6 +72,14 @@ def form_input(id, label, name, input_value="", icon=None, placeholder=None):
 		code = "<div class=\"input-prepend\"><span class=\"add-on\"><i class=\"icon-" + icon + "\"></i></span>" + code + "</div>"
 	return form_row(id, label, code)
 
+def form_textarea(name, input_value="Nothing to see here... Yet", placeholder="", size=(50, 6)):
+	code = "<textarea name=\"" + cgi.escape(name) + "\"" + \
+			"class=\"span11\"" + \
+			"placeholder=\"" + cgi.escape(placeholder) + "\"" + \
+			"cols=\"" + str(size[0]) + "\" rows=\"" + str(size[1]) + "\"" + \
+			">" + str(input_value) + "</textarea>"
+	return code
+
 def form_password(id, label, name, placeholder=None):
 	code = f_input(id, name, password=True, placeholder=placeholder)
 	return form_row(id, label, code)
@@ -93,4 +101,3 @@ def colored_bool(value, yes="Ja", no="Nein"):
 def bool_icon(value):
 	icon = "ok" if value else "remove"
 	return "<i class=\"icon-" + icon + "\"></i>"
-
