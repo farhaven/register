@@ -324,7 +324,8 @@ def main(login, conf, conn):
 	print("<h2>Bemerkungen</h2>")
 	print(html.form_start(box=False))
 	print(html.f_hidden("action", "update_note"))
-	print(html.form_textarea("note", login["note"], placeholder="Bin allergisch auf Sauerstoff, Kohlenstoff und Stickstoff.\nHab ne Sonnenlichtunverträglichkeit."))
+	print(html.form_textarea("note", login["note"] if login["note"] is not None else "",
+		placeholder="Bin allergisch auf Sauerstoff, Kohlenstoff und Stickstoff.\nHab ne Sonnenlichtunverträglichkeit."))
 	print(html.f_submit("Speichern"))
 	print(html.form_end(box=False))
 	print("</div>")
