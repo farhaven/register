@@ -54,6 +54,7 @@ if __name__ == "__main__":
 		note = cgi.escape(form.getfirst("note", ""))
 		c = conn.cursor()
 		c.execute("UPDATE users SET note = %s WHERE u_id = %s", (note, login["u_id"]))
+		c.execute("UPDATE users SET note_done = False WHERE u_id = %s", (login["u_id"], ))
 		conn.commit()
 		redirect.post(update="note")
 	elif form.getfirst("action") == "update_lunch":
