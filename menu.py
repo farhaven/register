@@ -246,7 +246,7 @@ def main(login, conf, conn):
 	print("<tbody>");
 	print("<tr class=\"" + ("success" if login["paid"] else "error") + "\"><td>Bezahlt</td><td>" + html.bool_icon(login["paid"]))
 	if login["paid"]:
-		if login["ticket"] != None and login["ticket"] != "" and login["ticket"] != "None":
+		if login["ticket"] is not None and login["ticket"] != "" and login["ticket"] != "None":
 			print("<span class=\"ticket\">Ticket: " + cgi.escape(login["ticket"]) + "</span>")
 		print(" (<a href=\"#kontoinfo\" role=\"button\" data-toggle=\"modal\" title=\"Konto-Information erneut einblenden\">Konto-Info</a>)")
 	else:
