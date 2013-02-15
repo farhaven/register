@@ -30,7 +30,7 @@ class Login(object):
 
 	def __getitem__(self, item):
 		c = self.db.cursor()
-		if item in ["u_id", "name", "email", "salt", "pwhash", "paid", "there", "ticket", "note"]:
+		if item in ["u_id", "name", "email", "salt", "pwhash", "paid", "there", "ticket", "note", "note_done"]:
 			if self.name() is None:
 				return None
 			if c.execute("SELECT " + item + " FROM users WHERE name = %s", (self.name(),)) == 1L:

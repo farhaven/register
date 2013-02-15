@@ -337,6 +337,12 @@ def main(login, conf, conn):
 
 	print("<div class=\"well well-small\">")
 	print("<h2>Bemerkungen</h2>")
+	print("<table class=\"table\">")
+	print("<tbody>")
+	print("<tr class=\"" + ("success" if login["note_done"] else "error") + "\">")
+	print("<td>" + html.bool_icon(login["note_done"]) + "</td>")
+	print("<td>" + ("Jemand" if login["note_done"] else "(Noch) Niemand") + " hat diese Bemerkung bearbeitet")
+	print("</td></tr></tbody></table>")
 	print(html.form_start(box=False))
 	print(html.f_hidden("action", "update_note"))
 	print(html.form_textarea("note", login["note"] if login["note"] is not None else "",
