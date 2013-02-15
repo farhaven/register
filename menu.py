@@ -173,10 +173,13 @@ def admin(conf, conn):
 
 	print("<h1>Bemerkungen an die Orga</h1>")
 	print("<div><table class=\"table table-bordered\">")
-	print(html.tb_row(["Benutzer", "Bemerkung"], head=True))
-	cursor.execute("SELECT name, note FROM users WHERE note IS NOT NULL AND note <> \"\"")
-	for x in sorted(map(lambda x: (x[0], x[1].replace("\n", "<br/>")), cursor.fetchall()), key=lambda x: str(x[0]).lower()):
-		print(html.tb_row(x))
+	print(html.tb_row(["Benutzer", "Bemerkung", "Done"], head=True))
+	cursor.execute("SELECT u_id, name, note, note_done FROM users WHERE note IS NOT NULL AND note <> \"\"")
+	for (u_id, name, note, note_done) in sorted(cursor.fetchall(), key=lambda x: str(x[1]).lower()):
+		note = note.replace("\n", "<br/>")
+		done = "<a class=\"btn btn-%s\" href=\"?action=mark_done&value=%s&user=%s\"><i class=\"icon-%s\"></i></a>"
+		done = done % ("success" if note_done else "danger", "no" if note_done else "yes", str(u_id), "ok" if note_done else "remove")
+		print(html.tb_row([name, note, done]))
 	print("</table></div>")
 
 	print("<h1>Admins</h1>")
