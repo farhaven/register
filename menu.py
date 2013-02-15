@@ -116,6 +116,18 @@ def admin(conf, conn):
 			print("</pre></div>")
 		finally:
 			conn.commit()
+	elif form.getfirst("action") == "mark_done":
+		try:
+			u_id = int(form.getfirst("user"))
+			val = True if form.getfirst("value") == "yes" else False
+			cursor.execute("UPDATE users SET note_done = %s WHERE u_id = %s", (val, u_id))
+		except Excetion as err:
+			print("<div class=\"alert alert-error\"><pre>")
+			traceback.print_exc(file=sys.stdout)
+			print("</pre></div>")
+		finally:
+			conn.commit()
+
 
 	cursor.execute("SELECT count(*), COALESCE(sum(paid), 0), COALESCE(sum(there), 0) FROM users")
 	print("<h1>%d Benutzer (%d haben bezahlt, %d sind da)</h1>" % cursor.fetchone())
