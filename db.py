@@ -35,10 +35,11 @@ def init(conf):
 			"email TEXT",
 			"salt TEXT",
 			"pwhash TEXT",
-			"paid BOOLEAN",
-			"there BOOLEAN",
+			"paid BOOLEAN DEFAULT false",
+			"there BOOLEAN DEFAULT false",
 			"ticket TEXT",
 			"note TEXT",
+			"note_done BOOLEAN DEFAULT false"
 			], [ "UNIQUE(name(128))" ]
 		)
 
