@@ -282,23 +282,31 @@ def main(login, conf, conn):
 
 		items = [ size ]
 
-		if shirts[size].count(False) == 0:
+		if shirts[size].count(False) == 0 or not conf.get("shirt_order"):
 			items.append("<a class=\"btn\"><i class=\"icon-minus-sign\"></i></a>")
 		else:
 			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_R" + size + "\"><i class=\"icon-minus-sign\"></i></a>")
 		items.append(str(shirts[size].count(False)))
-		items.append("<a class=\"btn btn-success\" href=\"?order=add_R" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
+		if conf.get("shirt_order"):
+			items.append("<a class=\"btn btn-success\" href=\"?order=add_R" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
+		else:
+			items.append("<a class=\"btn\"><i class=\"icon-plus-sign\"></i></a>")
 
-		if shirts[size].count(True) == 0:
+		if shirts[size].count(True) == 0 or not conf.get("shirt_order"):
 			items.append("<a class=\"btn\"><i class=\"icon-minus-sign\"></i></a>")
 		else:
 			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_G" + size + "\"><i class=\"icon-minus-sign\"></i></a>")
 		items.append(str(shirts[size].count(True)))
-		items.append("<a class=\"btn btn-success\" href=\"?order=add_G" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
+		if conf.get("shirt_order"):
+			items.append("<a class=\"btn btn-success\" href=\"?order=add_G" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
+		else:
+			items.append("<a class=\"btn\"><i class=\"icon-plus-sign\"></i></a>")
 
 		return html.tb_row(items)
 
 	print("<h2>Shirts</h2>")
+	if not conf.get("shirt_order"):
+		print("<div>Die Shirtbestellung ist abgeschlossen!</div>")
 	print("<table class=\"table\">")
 	print("<thead><tr><th>Gr&ouml;&szlig;e</th><th colspan=\"3\">Regular</th><th colspan=\"3\">Girlyshirts</th></tr></thead>")
 	print("<tbody>")
@@ -310,10 +318,11 @@ def main(login, conf, conn):
 	print(shirt_order_row("XXXL"))
 	print(shirt_order_row("4XL"))
 	print("</tbody></table>")
-	print("<form method=\"POST\">")
-	print(html.f_hidden("order", "clear_all"))
-	print(html.f_submit("Zur&uuml;cksetzen"))
-	print("</form>")
+	if conf.get("shirt_order"):
+		print("<form method=\"POST\">")
+		print(html.f_hidden("order", "clear_all"))
+		print(html.f_submit("Zur&uuml;cksetzen"))
+		print("</form>")
 	print("</div></div>")
 
 	print("<div class=\"span6\"><div class=\"well well-small\">")

@@ -93,7 +93,7 @@ if __name__ == "__main__":
 		errors = usermgmt.addUser(form, conf, conn)
 		if errors is None:
 			redirect.post(update="newuser")
-	elif form.getfirst("order") is not None:
+	elif form.getfirst("order") is not None and conf.get("shirt_config"):
 		cursor = conn.cursor()
 		try:
 			order = form.getfirst("order")

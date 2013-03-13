@@ -2,5 +2,6 @@
 	"db_user": "user",
 	"db_pass": "pass",
 	"db_database": "database",
-	"maxusers": 1000
+	"maxusers": 1000,
+	"shirt_order": true
 }
