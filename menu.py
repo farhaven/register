@@ -285,20 +285,24 @@ def main(login, conf, conn):
 		if shirts[size].count(False) == 0 or not conf.get("shirt_order"):
 			items.append("<a class=\"btn\"><i class=\"icon-minus-sign\"></i></a>")
 		else:
-			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_R" + size + "\"><i class=\"icon-minus-sign\"></i></a>")
+			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_R" + size +
+							 "\"><i class=\"icon-minus-sign\"></i></a>")
 		items.append(str(shirts[size].count(False)))
 		if conf.get("shirt_order"):
-			items.append("<a class=\"btn btn-success\" href=\"?order=add_R" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
+			items.append("<a class=\"btn btn-success\" href=\"?order=add_R" + size +
+							 "\"><i class=\"icon-plus-sign\"></i></a>")
 		else:
 			items.append("<a class=\"btn\"><i class=\"icon-plus-sign\"></i></a>")
 
 		if shirts[size].count(True) == 0 or not conf.get("shirt_order"):
 			items.append("<a class=\"btn\"><i class=\"icon-minus-sign\"></i></a>")
 		else:
-			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_G" + size + "\"><i class=\"icon-minus-sign\"></i></a>")
+			items.append("<a class=\"btn btn-danger\" href=\"?order=sub_G" + size +
+							 "\"><i class=\"icon-minus-sign\"></i></a>")
 		items.append(str(shirts[size].count(True)))
 		if conf.get("shirt_order"):
-			items.append("<a class=\"btn btn-success\" href=\"?order=add_G" + size + "\"><i class=\"icon-plus-sign\"></i></a>")
+			items.append("<a class=\"btn btn-success\" href=\"?order=add_G" + size +
+							 "\"><i class=\"icon-plus-sign\"></i></a>")
 		else:
 			items.append("<a class=\"btn\"><i class=\"icon-plus-sign\"></i></a>")
 
