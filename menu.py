@@ -342,7 +342,7 @@ def main(login, conf, conn):
 	print(html.tb_row(["Marmelade", html.f_checkbox("food", "jam", login["lunch"]["jam"])]))
 	print(html.tb_row(["Cornflakes", html.f_checkbox("food", "cornflakes", login["lunch"]["cornflakes"])]))
 	print("</tbody></table>")
-	print(html.f_submit("Aktualisieren"))
+	print(html.f_submit("Speichern"))
 	print("</form>")
 	print("</div></div>")
 
