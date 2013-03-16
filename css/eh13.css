@@ -21,3 +21,9 @@ table, td, th {
 	/* text-align: center; */
 	vertical-align: center;
 }
+
+a[name] {
+	padding-top: 70px;
+	margin-top: -70px;
+	display: inline-block; /* webkit */
+}

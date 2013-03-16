@@ -128,6 +128,7 @@ def admin(conf, conn):
 		finally:
 			conn.commit()
 
+	current_position = 0
 
 	cursor.execute("SELECT count(*), COALESCE(sum(paid), 0), COALESCE(sum(there), 0) FROM users")
 	print("<h1>%d Benutzer (%d haben bezahlt, %d sind da)</h1>" % cursor.fetchone())
@@ -146,23 +147,32 @@ def admin(conf, conn):
 		cursor.execute("SELECT size, girly FROM shirts WHERE u_id = %s", (x[0], ))
 		for s in cursor.fetchall():
 			user["shirts"].append(("G" if s[1] == True else "R") + "_" + s[0])
-		tbl_user  = "<span title=\"" + cgi.escape(user["email"]) + "\">"
-		tbl_user += "<a href=\"?action=resetpw&user=" + urllib.quote(user["name"]) + "\" onclick=\"return confirm('Sure?');\">"
-		tbl_user += cgi.escape(user["name"])
+		tbl_user  = "<a name=\"" + str(current_position) + "\"><span title=\"" + cgi.escape(user["email"]) + "\"></a>"
+		tbl_user += "<a href=\"?action=resetpw&user=" + urllib.quote(user["name"]) + "#" + str(current_position)
+		tbl_user += "\" onclick=\"return confirm('Really request new password for \"" + urllib.quote(user["name"]) + "\""
+		tbl_user += "?');\">" + cgi.escape(user["name"])
 		tbl_user += "</a>"
 		tbl_user += "</span>"
 
-		tbl_del = "<a class=\"btn btn-warning\" href=\"?action=delete&user=" + urllib.quote(user["name"]) + "\" onclick=\"return confirm('Are you serious, bro?');\"><i class=\"icon-trash\"></i></a>"
+		tbl_del  = "<a class=\"btn btn-warning\" href=\"?action=delete&user=" + urllib.quote(user["name"])
+		tbl_del += "#" + str(current_position)
+		tbl_del += "\" onclick=\"return confirm('Really delete \"" + urllib.quote(user["name"]) + "\"?');\">"
+		tbl_del += "<i class=\"icon-trash\"></i></a>"
+
 		tbl_paid = "<a href=\"?action=setpaid&user=" + urllib.quote(user["name"]) + "&value="
 		if user["has_paid"]:
-			tbl_paid += "no\" class=\"btn btn-success\"><i class=\"icon-ok\"></i></a>"
+			tbl_paid += "no#" + str(current_position) + "\" class=\"btn btn-success\"><i class=\"icon-ok\"></i></a>"
 		else:
-			tbl_paid += "yes\" class=\"btn btn-danger\"><i class=\"icon-remove\"></i></a>"
+			tbl_paid += "yes#" + str(current_position) + "\" class=\"btn btn-danger\"><i class=\"icon-remove\"></i></a>"
+
 		tbl_there = "<a href=\"?action=setthere&user=" + urllib.quote(user["name"]) + "&value="
 		if user["is_there"]:
-			tbl_there += "no\" class=\"btn btn-success\"><i class=\"icon-ok\"></i></a>"
+			tbl_there += "no#" + str(current_position) + "\" class=\"btn btn-success\"><i class=\"icon-ok\"></i></a>"
 		else:
-			tbl_there += "yes\" class=\"btn btn-danger\"><i class=\"icon-remove\"></i></a>"
+			tbl_there += "yes#" + str(current_position) + "\" class=\"btn btn-danger\"><i class=\"icon-remove\"></i></a>"
+
+		current_position += 1
+
 		print(html.tb_row([tbl_user, tbl_del, tbl_paid, tbl_there, user["shirts"], user["ticket"]]))
 	print("</table></div>")
 
@@ -189,8 +199,11 @@ def admin(conf, conn):
 	cursor.execute("SELECT u_id, name, email, note, note_done FROM users WHERE note IS NOT NULL AND note <> \"\"")
 	for (u_id, name, _email, note, note_done) in sorted(cursor.fetchall(), key=lambda x: str(x[1]).lower()):
 		note = note.replace("\n", "<br/>")
-		done = "<a class=\"btn btn-%s\" href=\"?action=mark_done&value=%s&user=%s\"><i class=\"icon-%s\"></i></a>"
+		done  = "<a name=\"" + str(current_position) + "\"></a>"
+		done += "<a class=\"btn btn-%s\" href=\"?action=mark_done&value=%s&user=%s#" + str(current_position)
+		done += "\"><i class=\"icon-%s\"></i></a>"
 		done = done % ("success" if note_done else "danger", "no" if note_done else "yes", str(u_id), "ok" if note_done else "remove")
+		current_position += 1
 		print(html.tb_row(["<span title=\"" + cgi.escape(_email) + "\">" + name + "</span>", note, done]))
 	print("</table></div>")
 
