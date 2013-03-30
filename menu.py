@@ -74,9 +74,29 @@ def admin(conf, conn):
 			cursor.execute("DELETE FROM users WHERE u_id = %s", (uid, ))
 			conn.commit()
 	elif form.getfirst("action") == "setthere":
+		user = usermgmt.Login(db=conn, name=form.getfirst("user", ""))
 		val = True if form.getfirst("value") == "yes" else False
-		rv = cursor.execute("UPDATE users SET there = %s WHERE name = %s", (val, form.getfirst("user", "")))
+		rv = cursor.execute("UPDATE users SET there = %s WHERE name = %s", (val, str(user.name())))
 		conn.commit()
+		if val:
+			txt  = "Hallo " + str(user.name()) + "!\n\n"
+			txt += "Willkommen beim Easterhegg 2013 in Paderborn.\n\n"
+			txt += "Der Fahrplan ist auf\n\n\thttps://frab.eh13.c3pb.de/en/eh13/public/schedule\n\nzu finden.\n\n"
+			txt += "Da wir morgen grillen wollen, wird im laufe des Nachmittages im Thekenbereich\n"
+			txt += "eine Liste für Grillgut aushängen.\n\n"
+			txt += "Für anderes essen gibt es auf\n\n"
+			txt += "\thttps://fsmi.uni-paderborn.de/service/essen-und-trinken/lecker-essen/\n\n"
+			txt += "einen Überblick über die Lieferdienste in Paderborn.\n\n"
+			txt += "Viel spass auf dem Easterhegg wünscht dir deine EH13-Orga"
+			txt  = email.mime.text.MIMEText(txt)
+			txt.set_charset("utf-8")
+			txt["From"] = "register@eh13.c3pb.de"
+			txt["Subject"] = "Willkommen beim Easterhegg"
+			txt["To"] = user["email"]
+			s = smtplib.SMTP()
+			s.connect()
+			s.sendmail("register@eh13.c3pb.de", [ user["email"] ], txt.as_string())
+			s.quit()
 	elif form.getfirst("action") == "resetpw":
 		user = usermgmt.Login(db=conn, name=form.getfirst("user", ""))
 		print("<div class=\"alert alert-info\">PW reset for " + str(user.name()) + " requested</div>")
