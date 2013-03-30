@@ -112,6 +112,20 @@ if __name__ == "__main__":
 		redirect.post(update="shirts")
 
 	print("Status: 200 OK")
+
+	if 'REDIRECT_URL' in os.environ and os.environ['REDIRECT_URL'].startswith("/info"):
+		print("Content-Type: application/json")
+		print()
+		cursor = conn.cursor()
+		cursor.execute("SELECT count(*), COALESCE(sum(there), 0) FROM users")
+		(total, present) = cursor.fetchone()
+		status = {
+				"total": int(total),
+				"present": int(present)
+		}
+		print(json.dumps(status, indent=4))
+		sys.exit(0)
+
 	print("Content-Type: text/html; charset=utf-8")
 	print(login.cookies)
 	print()
